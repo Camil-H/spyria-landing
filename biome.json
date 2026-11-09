@@ -4,5 +4,15 @@
   "javascript": { "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" } },
   "css": { "parser": { "tailwindDirectives": true } },
   "html": { "experimentalFullSupportEnabled": true },
-  "files": { "includes": ["**", "!**/dist", "!**/.astro", "!**/playwright-report", "!**/test-results"] }
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/.astro",
+      "!**/.product",
+      "!**/.wrangler",
+      "!**/playwright-report",
+      "!**/test-results"
+    ]
+  }
 }
