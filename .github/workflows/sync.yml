@@ -1,0 +1,58 @@
+name: Sync product docs
+
+on:
+  repository_dispatch:
+    types: [product-docs-changed]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Full commit SHA of the product repository to build the docs from
+        required: true
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-product-docs
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PRODUCT_COMMIT: ${{ github.event.client_payload.commit || inputs.ref }}
+      SYNC_BRANCH: sync/product-docs
+    steps:
+      - uses: actions/checkout@v5
+      - name: Point product.ref at the product commit
+        run: |
+          if [[ ! "$PRODUCT_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Expected a full commit SHA, got '$PRODUCT_COMMIT'."
+            exit 1
+          fi
+          echo "$PRODUCT_COMMIT" > product.ref
+          echo "SHORT_SHA=${PRODUCT_COMMIT:0:7}" >> "$GITHUB_ENV"
+      - name: Open or update the pull request
+        run: |
+          if git diff --quiet -- product.ref; then
+            echo "main already builds the docs from $SHORT_SHA."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --create "$SYNC_BRANCH"
+          git commit --quiet --message "docs: sync to $SHORT_SHA" -- product.ref
+          git push --force origin "$SYNC_BRANCH"
+          title="docs: sync to $SHORT_SHA"
+          body="Builds the docs from [Camil-H/spyria@$SHORT_SHA](https://github.com/Camil-H/spyria/commit/$PRODUCT_COMMIT)."
+          open_pull_request=$(gh pr list --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number')
+          if [[ -n "$open_pull_request" ]]; then
+            gh pr edit "$open_pull_request" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body "$body"
+          fi
+          # A pull request opened with GITHUB_TOKEN starts no pull_request workflow; a dispatch does:
+          # https://docs.github.com/en/actions/concepts/security/github_token#when-github_token-triggers-workflow-runs
+          gh workflow run ci.yml --ref "$SYNC_BRANCH"

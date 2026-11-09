@@ -124,3 +124,259 @@
     display: none;
   }
 }
+
+.docs-prose {
+  max-width: 48rem;
+  overflow-wrap: break-word;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & h1 {
+    @apply display-1;
+    font-size: var(--text-5xl);
+    line-height: 1.05;
+  }
+
+  & h2 {
+    @apply heading-3;
+    margin-top: 3rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  & h3,
+  & h4 {
+    @apply title;
+    margin-top: 2rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  & p,
+  & ul,
+  & ol,
+  & blockquote {
+    @apply body;
+    margin-top: 1rem;
+  }
+
+  & ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+  }
+
+  & ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+
+  & li + li {
+    margin-top: 0.5rem;
+  }
+
+  & li > ul,
+  & li > ol {
+    margin-top: 0.5rem;
+  }
+
+  & a {
+    @apply highlight-link;
+  }
+
+  & blockquote {
+    border-left: 2px solid var(--color-callout-edge);
+    padding-left: 1rem;
+    color: var(--color-muted);
+  }
+
+  & :not(pre) > code {
+    border-radius: var(--radius-sm);
+    background-color: var(--color-sunken);
+    padding: 0.125rem 0.25rem;
+    font-size: 0.875em;
+    overflow-wrap: anywhere;
+  }
+
+  & pre {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background-color: var(--color-sunken);
+    padding: 1rem;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  & .table-scroll {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+
+  & table {
+    @apply caption;
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+
+  & th,
+  & td {
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  & th {
+    font-weight: 500;
+  }
+
+  & td:first-child {
+    min-width: 8rem;
+  }
+
+  & hr {
+    margin-top: 2rem;
+    border-color: var(--color-line);
+  }
+
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.code-token-keyword {
+  color: var(--color-code-keyword);
+}
+
+.code-token-string,
+.code-token-string-expression {
+  color: var(--color-code-string);
+}
+
+.code-token-constant,
+.code-token-parameter {
+  color: var(--color-code-constant);
+}
+
+.code-token-function,
+.code-token-link {
+  color: var(--color-code-function);
+}
+
+.code-token-comment {
+  color: var(--color-code-comment);
+}
+
+.code-foreground,
+.code-token-punctuation {
+  color: var(--color-ink);
+}
+
+.code-italic {
+  font-style: italic;
+}
+
+.code-bold {
+  font-weight: 500;
+}
+
+.code-underline {
+  text-decoration-line: underline;
+}
+
+.diagram {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+
+  & svg {
+    max-width: none;
+    height: auto;
+    --bg: var(--color-page);
+    --fg: var(--color-ink);
+    --_text: var(--fg);
+    --_text-sec: color-mix(in srgb, var(--fg) 75%, var(--bg));
+    --_text-muted: color-mix(in srgb, var(--fg) 70%, var(--bg));
+    --_text-faint: color-mix(in srgb, var(--fg) 45%, var(--bg));
+    --_line: color-mix(in srgb, var(--fg) 50%, var(--bg));
+    --_arrow: color-mix(in srgb, var(--fg) 85%, var(--bg));
+    --_node-fill: var(--color-raised);
+    --_node-stroke: color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_group-fill: var(--bg);
+    --_group-hdr: var(--color-sunken);
+    --_inner-stroke: color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge: color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+
+  & text {
+    font-family: var(--font-sans);
+  }
+}
+
+.docs-nav a[aria-current="page"] {
+  @apply highlight-link;
+}
+
+@media (width >= 64rem) {
+  .docs-nav::details-content {
+    content-visibility: visible;
+    display: contents;
+  }
+}
+
+.pager-link {
+  display: block;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  transition: border-color 150ms var(--ease-settle);
+
+  &:hover {
+    border-color: var(--color-muted);
+  }
+}
+
+.docs-search {
+  --pf-font: var(--font-sans);
+  --pf-text: var(--color-ink);
+  --pf-text-secondary: var(--color-muted);
+  --pf-text-muted: var(--color-muted);
+  --pf-background: var(--color-raised);
+  --pf-border: var(--color-line);
+  --pf-border-focus: var(--color-focus);
+  --pf-outline-focus: var(--color-focus);
+  --pf-hover: var(--color-hover);
+  --pf-mark: var(--color-highlight);
+  --pf-skeleton: var(--color-sunken);
+  --pf-skeleton-shine: var(--color-hover);
+  --pf-border-radius: var(--radius-md);
+  --pf-input-font-size: var(--text-base);
+  --pf-result-title-font-size: var(--text-base);
+  --pf-result-excerpt-font-size: var(--text-sm);
+  --pf-shadow-sm: none;
+  --pf-shadow-md: none;
+  --pf-shadow-lg: none;
+  min-height: 2.5rem;
+}
+
+.docs-prose {
+  & .align-center {
+    text-align: center;
+  }
+
+  & .align-right {
+    text-align: right;
+  }
+}
+
+.docs-search pagefind-searchbox {
+  color-scheme: inherit;
+}
+
+.docs-prose td code {
+  overflow-wrap: normal;
+}

@@ -27,17 +27,26 @@ Stack: Astro (static output), Tailwind v4, Bun for scripts and the lockfile, Clo
 
 ```sh
 bun install
+bun run sync            # fetch the product docs at product.ref into .product/
 bun run dev             # http://localhost:4321
-bun run build           # dist/
-bun run check           # typecheck, lint, build, check:links, check:budgets, test
+bun run build           # sync, dist/, then the Pagefind index in dist/pagefind/
+bun run check           # typecheck, lint, test:unit, build, check:links, check:budgets, test
 ```
 
 `bunx biome check --write .` fixes formatting and import order. `PUBLIC_CF_ANALYTICS_TOKEN` at build time adds the Cloudflare Web Analytics beacon.
 
+## Docs from the product repository
+
+- `product.ref` holds the full commit SHA of the product the docs are built from. `scripts/sync-product.ts` (run by `dev`, `build` and `typecheck`) checks out the product's `docs/` (and `install.sh` once it exists) at that commit into `.product/` (gitignored, never edited by hand), with each page's last-changed date in `.product/docs-dates.json`. It skips the fetch when `.product/` already matches the ref.
+- While the product repository is private, the sync needs a token that can read it: `PRODUCT_REPO_TOKEN` (CI, Cloudflare builds), or the GitHub CLI's login locally. Once the repository is public, no token is needed.
+- `src/docs/` turns those files into pages: the sidebar follows `docs/README.md` and the decision table, links between docs become site links and links elsewhere in the product become GitHub links at `product.ref`, Mermaid diagrams become inline SVG at build time, code colours are classes (the Content-Security-Policy allows no inline style). Each page also has a Markdown twin at its path with `.md`.
+- A push to the product's `main` that touches `docs/**` dispatches `product-docs-changed`; `.github/workflows/sync.yml` then opens or updates the pull request "docs: sync to <sha>" from `sync/product-docs`. Run it by hand from the Actions tab with a commit SHA to move the docs to any product commit.
+
 ## Tests
 
-- **Build checks** (`scripts/`, over `dist/`): `check:links` fails on any internal link or `#anchor` that does not resolve; pages still to be built are allow-listed at the top of `scripts/check-links.ts`. `check:budgets` fails on any script beyond the allowed ones, on an inline theme script the `public/_headers` Content-Security-Policy does not allow by hash, and on a Home transfer above 300 KB.
-- **Playwright** (`tests/`, Chromium, against `astro preview` of the built site): one user story per test, titled "As <role>, I …"; no JavaScript, 360 px width, theme, axe in light and dark.
+- **Build checks** (`scripts/`, over `dist/`): `check:links` fails on any internal link or `#anchor` that does not resolve; pages still to be built are allow-listed at the top of `scripts/check-links.ts`. `check:links` also follows the links of the Markdown twins. `check:budgets` fails on any script beyond the allowed ones (the docs search only on docs pages), on an inline theme script the `public/_headers` Content-Security-Policy does not allow by hash, on any inline `style` the policy would block, and on a Home transfer above 300 KB.
+- **Unit** (`bun run test:unit`, `*.test.ts` next to the file in `src/`): link rewriting, sidebar parsing, Markdown twins.
+- **Playwright** (`tests/`, Chromium, against `wrangler dev` serving the built site, so `public/_headers` and its Content-Security-Policy apply): one user story per test, titled "As <role>, I …"; no JavaScript, 360 px width, theme, axe in light and dark.
 - No pixel baselines; the reviewer judges the looks from the pull request screenshots. Never weaken an assertion to make a check pass; if a check must change, say so in the pull request.
 
 ## Conventions

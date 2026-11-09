@@ -89,3 +89,11 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 }
+
+@theme inline {
+  --color-code-keyword: light-dark(var(--color-red-800), var(--color-red-100));
+  --color-code-string: light-dark(var(--color-green-950), var(--color-green-400));
+  --color-code-constant: light-dark(var(--color-aqua-900), var(--color-aqua-500));
+  --color-code-function: light-dark(var(--color-primary-900), var(--color-primary-400));
+  --color-code-comment: var(--color-muted);
+}
