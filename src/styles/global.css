@@ -381,33 +381,14 @@
   overflow-wrap: normal;
 }
 
-.transcript-message {
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: 0.75rem;
-}
-
-.transcript-avatar {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border-radius: 9999px;
-  background-color: var(--color-sunken);
-  color: var(--color-ink);
-  font-size: var(--text-xs);
-  font-weight: 500;
-}
-
-img.transcript-avatar {
-  border-radius: var(--radius-md);
-}
-
-.spires-band {
-  mask-image: radial-gradient(closest-side at 50% 50%, black 75%, transparent);
+.spires-stage {
+  mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
 }
 
 .spires-still {
   opacity: 0.5;
-  mask-image: radial-gradient(closest-side at 50% 50%, black 60%, transparent);
+  mask-image:
+    linear-gradient(to bottom, transparent, black 60%),
+    linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  mask-composite: intersect;
 }

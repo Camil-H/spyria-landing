@@ -7,8 +7,10 @@ const homeSections = [
     heading: 'One workspace for people and agents',
     text: 'Projects, channels, threads and agent chats in one sidebar',
   },
-  { heading: 'One chat, two people, one agent', text: "Salim answered the agent's question in Camille's chat" },
-  { heading: 'Built on a few firm choices', text: 'Claude Code and Codex sign-ins never reach the server' },
+  {
+    heading: 'A person behind every agent',
+    text: 'anything that writes waits for your approval',
+  },
   {
     heading: 'Runs on your servers',
     text: 'You need a machine with Docker, an HTTPS address and an identity provider.',
@@ -43,6 +45,9 @@ test.describe('with JavaScript disabled', () => {
       await expect(page.getByRole('heading', { level: 2, name: heading })).toBeVisible()
       await expect(page.getByText(text)).toBeVisible()
     }
+    const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
+    await expect(exampleChat).toBeVisible()
+    await expect(exampleChat.getByText('Answered by Salim Condo')).toBeVisible()
     await expect(page.locator(`${heroSpires} path`).first()).toBeAttached()
     await expect(page.locator(`${heroSpires} animate`)).toHaveCount(0)
   })

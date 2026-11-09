@@ -43,6 +43,9 @@
   --color-ink: light-dark(var(--color-light-neutral-985), var(--color-light-neutral-50));
   --color-muted: light-dark(var(--color-light-neutral-800), var(--color-grey-200));
   --color-hover: light-dark(var(--color-light-neutral-50), var(--color-grey-900));
+  --color-selected: light-dark(var(--color-light-neutral-100), var(--color-grey-800));
+  --color-added: light-dark(var(--color-green-100), var(--color-green-950));
+  --color-card-edge: light-dark(var(--color-line), color-mix(in oklab, var(--color-primary-500) 34%, transparent));
   --color-accent: var(--color-primary-500);
   --color-accent-hover: var(--color-primary-400);
   --color-accent-ink: var(--color-primary-985);

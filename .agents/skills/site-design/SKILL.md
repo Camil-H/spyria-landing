@@ -49,7 +49,7 @@ Tailwind's radius values only. When a shape sits inside another with a gap under
 
 ## Motion
 
-- At most one moving element in any viewport: the spires, in the Home hero band (60vh at most), never behind body text, opacity 0.5 at most where text overlaps.
+- At most one moving element in any viewport: the spires, full width in the Home hero stage, behind the demo chat card only (card surface at least 90% opaque), never directly behind page text.
 - The spires pause off screen (IntersectionObserver) and when the tab is hidden; `prefers-reduced-motion` shows one still frame.
 - No text animates in, no scroll reveals, no scroll-jacking, no parallax. Every word is in the HTML at first paint.
 - Hover and focus transitions take 150 ms at most and animate only colour, `transform` or `opacity`; never `top`, `left`, `width` or `height`. Use `ease-settle` (`cubic-bezier(0.22, 1, 0.36, 1)`), never a browser default curve.
