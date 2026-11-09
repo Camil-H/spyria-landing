@@ -5,9 +5,10 @@ interface Props {
   idPrefix: string
   animated?: boolean
   class?: string
+  anchor?: 'middle' | 'bottom'
 }
 
-const { idPrefix, animated = false, class: className } = Astro.props
+const { idPrefix, animated = false, class: className, anchor = 'middle' } = Astro.props
 ---
 
 <svg
@@ -15,7 +16,7 @@ const { idPrefix, animated = false, class: className } = Astro.props
   focusable="false"
   class:list={['pointer-events-none', className]}
   viewBox="0 0 100 100"
-  preserveAspectRatio="xMidYMid slice"
+  preserveAspectRatio={anchor === 'bottom' ? 'xMidYMax slice' : 'xMidYMid slice'}
   data-spires-animated={animated ? idPrefix : undefined}
   set:html={spiresMarkupOf(idPrefix, true)}
 />
