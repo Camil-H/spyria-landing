@@ -24,7 +24,7 @@ async function syncProduct(ref: string) {
   }
   const startedAt = performance.now()
   rmSync(productDirectory, { recursive: true, force: true })
-  await checkOutProduct(ref, await productRepositoryToken())
+  await checkOutProduct(ref)
   await writeDocsDates()
   console.log(`Product docs: synced to ${ref.slice(0, 7)} in ${Math.round(performance.now() - startedAt)} ms.`)
 }
@@ -36,21 +36,17 @@ async function isSyncedTo(ref: string): Promise<boolean> {
   return head === ref && changes === ''
 }
 
-async function checkOutProduct(ref: string, token: string | undefined) {
+async function checkOutProduct(ref: string) {
   await git(['init', '--quiet', productDirectory], { cwd: rootDirectory })
   await git(['remote', 'add', 'origin', `${productRepositoryUrl}.git`])
   await git(['sparse-checkout', 'set', '--no-cone', '/docs/', '/install.sh'])
-  const authorization = token ? authorizationConfig(token) : {}
   try {
-    await git(['fetch', '--quiet', '--filter=blob:none', '--no-tags', 'origin', ref], { env: authorization })
-    await git(['checkout', '--quiet', 'FETCH_HEAD'], { env: authorization })
+    await git(['fetch', '--quiet', '--filter=blob:none', '--no-tags', 'origin', ref])
+    await git(['checkout', '--quiet', 'FETCH_HEAD'])
   } catch (error) {
     rmSync(productDirectory, { recursive: true, force: true })
-    const hint = token
-      ? 'Check that PRODUCT_REPO_TOKEN can read the repository and that the commit exists.'
-      : 'The repository is private until launch: set PRODUCT_REPO_TOKEN, or sign in with the GitHub CLI.'
     throw new ProductSyncError(
-      `Could not fetch ${productRepositoryUrl} at ${ref}. ${hint}\n${(error as Error).message}`,
+      `Could not fetch ${productRepositoryUrl} at ${ref}. Check that the commit exists.\n${(error as Error).message}`,
     )
   }
 }
@@ -66,33 +62,13 @@ async function writeDocsDates() {
   await Bun.write(datesFile, `${JSON.stringify(Object.fromEntries(entries), null, 2)}\n`)
 }
 
-async function productRepositoryToken(): Promise<string | undefined> {
-  if (process.env.PRODUCT_REPO_TOKEN) return process.env.PRODUCT_REPO_TOKEN
-  if (process.env.CI || !Bun.which('gh')) return undefined
-  const result = Bun.spawnSync(['gh', 'auth', 'token'], { stderr: 'ignore' })
-  const token = result.stdout.toString().trim()
-  return result.exitCode === 0 && token ? token : undefined
-}
-
-function authorizationConfig(token: string): Record<string, string> {
-  return {
-    GIT_CONFIG_COUNT: '1',
-    GIT_CONFIG_KEY_0: 'http.extraHeader',
-    GIT_CONFIG_VALUE_0: `Authorization: Basic ${btoa(`x-access-token:${token}`)}`,
-  }
-}
-
 async function git(
   args: string[],
-  {
-    cwd = productDirectory,
-    env = {},
-    allowFailure = false,
-  }: { cwd?: string; env?: Record<string, string>; allowFailure?: boolean } = {},
+  { cwd = productDirectory, allowFailure = false }: { cwd?: string; allowFailure?: boolean } = {},
 ): Promise<string> {
   const child = Bun.spawn(['git', ...args], {
     cwd,
-    env: { ...process.env, ...env, GIT_TERMINAL_PROMPT: '0' },
+    env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
     stdout: 'pipe',
     stderr: 'pipe',
   })
