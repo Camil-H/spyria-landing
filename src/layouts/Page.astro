@@ -9,7 +9,7 @@ interface Props {
 
 const { title, description } = Astro.props
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
-const fullTitle = title === 'Spyria' ? title : `${title} · Spyria`
+const fullTitle = title.startsWith('Spyria') ? title : `${title} · Spyria`
 const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN
 const currentPath = Astro.url.pathname
 ---
@@ -115,6 +115,7 @@ const currentPath = Astro.url.pathname
         {docsPublished && <a href="/docs" class="rounded-sm hover:text-ink">Docs</a>}
         <a href={productLicenseUrl} class="rounded-sm hover:text-ink">License</a>
       </nav>
+      <slot name="footer" />
     </footer>
   </body>
 </html>
