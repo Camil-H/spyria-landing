@@ -7,7 +7,7 @@ const git = (...args: string[]) =>
 
 export function lastCommitDateOf(sourceFiles: string[]): string {
   try {
-    if (git('rev-parse', '--is-shallow-repository') === 'true') return buildDate
+    if (git('rev-parse', '--is-shallow-repository') === 'true') return git('log', '-1', '--format=%cI', 'HEAD')
     return git('log', '-1', '--format=%cI', '--', ...sourceFiles) || buildDate
   } catch {
     return buildDate
