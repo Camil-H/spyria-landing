@@ -71,8 +71,7 @@ test('As a visitor scrolling past the hero, the spires stop animating once they 
   await page.goto('/')
   await expect(page.locator(`${heroSpires} animate`).first()).toBeAttached()
   const startedAt = await spiresClock(page)
-  await page.waitForTimeout(500)
-  expect(await spiresClock(page)).toBeGreaterThan(startedAt)
+  await expect.poll(() => spiresClock(page)).toBeGreaterThan(startedAt)
 
   await page.getByRole('heading', { name: 'Runs on your servers' }).scrollIntoViewIfNeeded()
   await expect
