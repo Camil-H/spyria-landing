@@ -1,6 +1,9 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, type Page, test } from '@playwright/test'
+import { docsPublished } from '../src/site'
+
+test.skip(!docsPublished, 'the docs are unpublished until the digest in docs/site/ lands')
 
 const productDocsDirectory = new URL('../.product/docs/', import.meta.url).pathname
 const docsIndex = readFileSync(`${productDocsDirectory}README.md`, 'utf8')

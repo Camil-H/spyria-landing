@@ -2,8 +2,10 @@
 import { getCollection, render } from 'astro:content'
 import { docsSlugOf } from '../../docs/routes'
 import Docs from '../../layouts/Docs.astro'
+import { docsPublished } from '../../site'
 
 export async function getStaticPaths() {
+  if (!docsPublished) return []
   const entries = await getCollection('docs')
   return entries.map((entry) => ({ params: { slug: docsSlugOf(entry.id) }, props: { entry } }))
 }

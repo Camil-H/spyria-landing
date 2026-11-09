@@ -1,5 +1,6 @@
 ---
 import Page from '../layouts/Page.astro'
+import { docsPublished } from '../site'
 ---
 
 <Page title="Page not found" description="This page does not exist on spyria.dev.">
@@ -8,7 +9,7 @@ import Page from '../layouts/Page.astro'
     <p class="lead mt-6 text-muted">The link may be old, or the page may have moved.</p>
     <ul class="body mt-8 space-y-2">
       <li><a href="/" class="highlight-link">Go to the home page</a></li>
-      <li><a href="/docs" class="highlight-link">Read the docs</a></li>
+      {docsPublished && <li><a href="/docs" class="highlight-link">Read the docs</a></li>}
     </ul>
   </section>
 </Page>
