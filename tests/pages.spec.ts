@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
+import { docsPublished } from '../src/site'
 
 const pages = [
   { name: 'Home', path: '/', heading: 'Agents work alone. Your team does not.' },
@@ -29,11 +30,24 @@ for (const { name, path, heading } of pages) {
   })
 }
 
-test('As a visitor on a missing page, I see the 404 page with links to Home and Docs', async ({ page }) => {
+test('As a visitor on a missing page, I see the 404 page with a link to Home, and to Docs once they are published', async ({
+  page,
+}) => {
   const response = await page.goto('/a-page-that-does-not-exist')
   expect(response?.status()).toBe(404)
   await expect(page.getByRole('link', { name: 'Go to the home page' })).toHaveAttribute('href', '/')
-  await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveAttribute('href', '/docs')
+  await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveCount(docsPublished ? 1 : 0)
+})
+
+test('While the docs are unpublished, /docs and its Markdown copies are not served and no page links to them', async ({
+  page,
+}) => {
+  test.skip(docsPublished, 'the docs are published')
+  expect((await page.goto('/docs'))?.status()).toBe(404)
+  expect((await page.goto('/docs/architecture/overview'))?.status()).toBe(404)
+  expect((await page.request.get('/docs/architecture/overview.md')).status()).toBe(404)
+  await page.goto('/')
+  await expect(page.locator('a[href^="/docs"]')).toHaveCount(0)
 })
 
 for (const colorScheme of ['light', 'dark'] as const) {

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css'
-import { navigation, productLicenseUrl, productRepositoryUrl } from '../site'
+import { docsPublished, navigation, productLicenseUrl, productRepositoryUrl } from '../site'
 
 interface Props {
   title: string
@@ -112,7 +112,7 @@ const currentPath = Astro.url.pathname
     <footer class="mx-auto mt-24 max-w-5xl border-t border-line px-4 py-10 sm:px-6">
       <nav aria-label="Footer" class="caption flex flex-wrap gap-x-6 gap-y-2 text-muted">
         <a href={productRepositoryUrl} class="rounded-sm hover:text-ink">GitHub</a>
-        <a href="/docs" class="rounded-sm hover:text-ink">Docs</a>
+        {docsPublished && <a href="/docs" class="rounded-sm hover:text-ink">Docs</a>}
         <a href={productLicenseUrl} class="rounded-sm hover:text-ink">License</a>
       </nav>
     </footer>
