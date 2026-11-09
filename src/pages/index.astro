@@ -2,15 +2,41 @@
 import Spires from '../components/Spires.astro'
 import Transcript from '../components/Transcript.astro'
 import Page from '../layouts/Page.astro'
-import { installPublished, principlesPublished } from '../site'
+import { installPublished, principlesPublished, productLicenseUrl, productRepositoryUrl } from '../site'
 
 const runIn = 'font-medium text-ink'
+const description =
+  'A self-hosted workspace where your team and its AI agents share chats, sandboxed runtimes and pull requests. Your keys, your servers, your sign-in.'
+const siteUrl = new URL('/', Astro.site).href
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Spyria',
+    url: siteUrl,
+    logo: new URL('/favicon.svg', Astro.site).href,
+    sameAs: [productRepositoryUrl],
+  },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Spyria', url: siteUrl },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Spyria',
+    description,
+    url: siteUrl,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Linux, macOS',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    license: productLicenseUrl,
+    sameAs: [productRepositoryUrl],
+  },
+]
 ---
 
-<Page
-  title="Spyria: a shared workspace for teams and their agents"
-  description="A self-hosted workspace where your team and its AI agents share chats, sandboxed runtimes and pull requests. Your keys, your servers, your sign-in."
->
+<Page title="Spyria: a shared workspace for teams and their agents" description={description}>
+  <Fragment slot="head">
+    {structuredData.map((block) => <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />)}
+  </Fragment>
   <section aria-labelledby="hero-heading" class="pt-12 sm:pt-16">
     <div class="mx-auto max-w-3xl text-center">
       <h1 id="hero-heading" class="display-1">Everyone works with agents. Rarely together.</h1>

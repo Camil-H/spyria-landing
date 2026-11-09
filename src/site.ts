@@ -10,3 +10,5 @@ export const navigation = [
   ...(installPublished ? [{ label: 'Install', href: '/install' }] : []),
   ...(docsPublished ? [{ label: 'Docs', href: '/docs' }] : []),
 ]
+
+export const publishedPages = [{ path: '/', sourceFiles: ['src/pages/index.astro', 'src/components/Transcript.astro'] }]

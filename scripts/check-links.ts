@@ -1,5 +1,5 @@
 import { Glob } from 'bun'
-import { builtHtmlPages, distDirectory } from './built-site'
+import { builtHtmlPages, decodeHtml, distDirectory, pagePathOf } from './built-site'
 
 const pages = await builtHtmlPages()
 const idsByPage = new Map(pages.map(({ path, html }) => [pagePathOf(path), idsIn(html)]))
@@ -40,11 +40,6 @@ console.log(
   `Links: ${pages.length} pages and ${markdownTwins.length} Markdown twins checked, no broken internal link or anchor.`,
 )
 
-function pagePathOf(htmlPath: string): string {
-  const withoutExtension = htmlPath.replace(/(^|\/)index\.html$/, '').replace(/\.html$/, '')
-  return `/${withoutExtension}`.replace(/\/$/, '') || '/'
-}
-
 function hrefsIn(html: string): string[] {
   return [...html.matchAll(/<a\b[^>]*?\shref="([^"]*)"/g)].map((match) => decodeHtml(match[1] ?? ''))
 }
@@ -55,8 +50,4 @@ function siteLinksIn(markdown: string): string[] {
 
 function idsIn(html: string): Set<string> {
   return new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((match) => decodeHtml(match[1] ?? '')))
-}
-
-function decodeHtml(text: string): string {
-  return text.replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll('&#39;', "'")
 }
