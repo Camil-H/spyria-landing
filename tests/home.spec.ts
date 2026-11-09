@@ -48,6 +48,7 @@ test.describe('with JavaScript disabled', () => {
     const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
     await expect(exampleChat).toBeVisible()
     await expect(exampleChat.getByText('Answered by Salim Condo')).toBeVisible()
+    await expect(exampleChat.getByText('Salim Condo', { exact: true })).toBeVisible()
     await expect(page.locator(`${heroSpires} path`).first()).toBeAttached()
     await expect(page.locator(`${heroSpires} animate`)).toHaveCount(0)
   })

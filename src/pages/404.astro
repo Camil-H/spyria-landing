@@ -3,7 +3,7 @@ import Page from '../layouts/Page.astro'
 import { docsPublished } from '../site'
 ---
 
-<Page title="Page not found" description="This page does not exist on spyria.dev.">
+<Page title="Page not found" description="This page does not exist on spyria.dev." isIndexed={false}>
   <section aria-labelledby="not-found-heading" class="max-w-2xl pt-16 sm:pt-24">
     <h1 id="not-found-heading" class="display-1">This page does not exist</h1>
     <p class="lead mt-6 text-muted">The link may be old, or the page may have moved.</p>

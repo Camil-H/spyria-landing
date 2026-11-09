@@ -127,6 +127,16 @@ const fileEdits = [
       </p>
     </li>
     <li class={messageItem}>
+      <div class={messageHeader}>
+        <span class={memberAvatar} aria-hidden="true">SC</span>
+        <span class={authorName}>Salim Condo</span>
+        <time datetime="10:45" class={messageTime}>10:45</time>
+      </div>
+      <p class={messageBody}>
+        I wrote the provider integration, so I'm following along. Ask me if this touches settlement.
+      </p>
+    </li>
+    <li class={messageItem}>
       <div class:list={[stepCard, 'gap-3']}>
         <div class="flex flex-col gap-1.5">
           <p class="mb-1">Should a 409 also mark the refund as settled, or only stop the retries?</p>
