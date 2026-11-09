@@ -1,0 +1,126 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "@fontsource/outfit/latin-400.css";
+@import "@fontsource/outfit/latin-500.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/newsreader/latin-400.css";
+
+@theme {
+  --font-sans: Outfit, system-ui, sans-serif;
+  --font-display: Newsreader, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility display-1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-5xl);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  @media (width >= 48rem) {
+    font-size: var(--text-7xl);
+  }
+}
+
+@utility heading-2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  text-wrap: balance;
+  @media (width >= 48rem) {
+    font-size: var(--text-5xl);
+    line-height: 1;
+  }
+}
+
+@utility heading-3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  text-wrap: balance;
+}
+
+@utility lead {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+  text-wrap: pretty;
+}
+
+@utility body {
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  text-wrap: pretty;
+}
+
+@utility title {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 500;
+}
+
+@utility caption {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+@utility highlight-link {
+  color: var(--color-ink);
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-highlight);
+  text-decoration-thickness: 0.45em;
+  text-underline-offset: -0.3em;
+  text-decoration-skip-ink: none;
+  &:hover {
+    text-decoration-thickness: 1.1em;
+    text-underline-offset: -0.85em;
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  code,
+  pre {
+    font-family: var(--font-mono);
+  }
+}
+
+.theme-icon-to-light {
+  display: none;
+}
+
+:root:not(.has-js) .theme-toggle {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-to-light {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-icon-to-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-to-light {
+    display: block;
+  }
+
+  :root:not([data-theme="light"]) .theme-icon-to-dark {
+    display: none;
+  }
+}

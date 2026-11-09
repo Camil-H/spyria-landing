@@ -1,0 +1,47 @@
+---
+import Page from '../layouts/Page.astro'
+---
+
+<Page
+  title="Spyria"
+  description="A self-hosted workspace where your team and its agents work in the same chats, on your servers and with your own model keys."
+>
+  <section aria-labelledby="hero-heading" class="max-w-3xl pt-16 pb-20 sm:pt-24">
+    <h1 id="hero-heading" class="display-1">Agents work alone. Your team does not.</h1>
+    <p class="lead mt-6 max-w-2xl text-muted">
+      Spyria is a workspace where members and agents work in the same chats and channels, on servers you run.
+    </p>
+  </section>
+
+  <section aria-labelledby="problem-heading" class="max-w-2xl">
+    <h2 id="problem-heading" class="heading-2">Agents are <span class="whitespace-nowrap">single-player</span> today</h2>
+    <div class="body mt-6 space-y-5">
+      <p>
+        Each person has their own chat window, and each laptop has its own coding agent. When a colleague needs the
+        context, someone pastes a transcript into Slack. Keys are shared through a password manager, and the bill shows
+        up at the end of the month.
+      </p>
+      <p>
+        Nobody can step into a colleague's agent session to answer its question or take over the work. Spyria puts that
+        session in a chat the whole team can open. Read <a href="#problem-heading" class="highlight-link">why agents
+        should be shared</a>.
+      </p>
+      <ul class="list-disc space-y-2 pl-6 marker:text-muted">
+        <li>Agents run in sandboxed runtimes on your servers or on a member's own machine.</li>
+        <li>Dev chats open pull requests on your repositories.</li>
+        <li>Admins set roles, single sign-on and budgets.</li>
+      </ul>
+      <p>
+        Each prompt uses the model key of the member who wrote it, and the workspace records both the prompter and the
+        owner of the chat. Each member sees their own spend under <code class="rounded-sm bg-sunken px-1.5 py-0.5 text-[0.875em]">Profile &gt; My usage</code>.
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="install-heading" class="mt-20 max-w-2xl">
+    <h2 id="install-heading" class="heading-2">Install on your own server</h2>
+    <p class="body mt-6">One Compose file runs the whole workspace, with your Postgres and your keys.</p>
+    <pre
+      class="mt-6 rounded-xl whitespace-pre-wrap [overflow-wrap:anywhere] border border-line bg-sunken p-4 text-sm leading-6"><code>curl -fsSL https://spyria.dev/install.sh | sh</code></pre>
+  </section>
+</Page>

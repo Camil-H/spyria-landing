@@ -1,0 +1,91 @@
+@theme {
+  --color-primary-100: #fff3c0;
+  --color-primary-200: #ffeeaa;
+  --color-primary-300: #ffea92;
+  --color-primary-400: #ffe57b;
+  --color-primary-500: #ffe165;
+  --color-primary-600: #dcc257;
+  --color-primary-700: #bba54a;
+  --color-primary-800: #99873d;
+  --color-primary-900: #76682f;
+  --color-primary-985: #2d2812;
+  --color-light-neutral-15: #f7f8fb;
+  --color-light-neutral-30: #f0f2f7;
+  --color-light-neutral-50: #ebedf3;
+  --color-light-neutral-100: #dfe2ed;
+  --color-light-neutral-800: #6a6f7f;
+  --color-light-neutral-985: #1f2125;
+  --color-grey-200: #9a9ca2;
+  --color-grey-500: #494c57;
+  --color-grey-800: #2c2e34;
+  --color-grey-900: #222328;
+  --color-grey-950: #18191c;
+  --color-grey-970: #131417;
+  --color-grey-985: #0d0d0f;
+  --color-green-100: #e4ffd0;
+  --color-green-400: #c6ff9d;
+  --color-green-500: #bcff8c;
+  --color-green-900: #577641;
+  --color-green-950: #3d532e;
+  --color-aqua-500: #8dfff9;
+  --color-aqua-900: #417673;
+  --color-red-100: #ffc1b7;
+  --color-red-500: #ff684e;
+  --color-red-800: #993e2f;
+  --color-red-950: #532219;
+}
+
+@theme inline {
+  --color-page: light-dark(var(--color-light-neutral-15), var(--color-grey-985));
+  --color-raised: light-dark(white, var(--color-grey-900));
+  --color-sunken: light-dark(var(--color-light-neutral-30), var(--color-grey-950));
+  --color-line: light-dark(var(--color-light-neutral-100), var(--color-grey-800));
+  --color-ink: light-dark(var(--color-light-neutral-985), var(--color-light-neutral-50));
+  --color-muted: light-dark(var(--color-light-neutral-800), var(--color-grey-200));
+  --color-hover: light-dark(var(--color-light-neutral-50), var(--color-grey-900));
+  --color-accent: var(--color-primary-500);
+  --color-accent-hover: var(--color-primary-400);
+  --color-accent-ink: var(--color-primary-985);
+  --color-highlight: light-dark(
+    var(--color-primary-500),
+    color-mix(in oklab, var(--color-primary-500) 55%, var(--color-grey-985))
+  );
+  --color-callout: light-dark(
+    var(--color-primary-100),
+    color-mix(in oklab, var(--color-primary-500) 14%, var(--color-grey-950))
+  );
+  --color-callout-edge: light-dark(
+    var(--color-primary-600),
+    color-mix(in oklab, var(--color-primary-500) 40%, var(--color-grey-950))
+  );
+  --color-focus: light-dark(var(--color-primary-800), var(--color-primary-500));
+  --color-spire-far: light-dark(
+    color-mix(in oklab, var(--color-light-neutral-800) 30%, transparent),
+    color-mix(in oklab, var(--color-grey-200) 16%, transparent)
+  );
+  --color-spire-mid: light-dark(
+    color-mix(in oklab, var(--color-primary-800) 55%, transparent),
+    color-mix(in oklab, var(--color-primary-500) 34%, transparent)
+  );
+  --color-spire-near: light-dark(
+    color-mix(in oklab, var(--color-primary-900) 80%, transparent),
+    color-mix(in oklab, var(--color-primary-500) 58%, transparent)
+  );
+  --color-spire-light: light-dark(var(--color-primary-700), var(--color-primary-300));
+  --color-spire-glow: light-dark(
+    color-mix(in oklab, var(--color-primary-200) 70%, transparent),
+    color-mix(in oklab, var(--color-primary-500) 16%, transparent)
+  );
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
