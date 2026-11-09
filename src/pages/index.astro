@@ -11,26 +11,30 @@ const runIn = 'font-medium text-ink'
   title="Spyria: a shared workspace for teams and their agents"
   description="A self-hosted workspace where your team and its AI agents share chats, sandboxed runtimes and pull requests. Your keys, your servers, your sign-in."
 >
-  <section
-    aria-labelledby="hero-heading"
-    class="grid items-center gap-y-10 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-12"
-  >
-    <div class="max-w-2xl">
+  <section aria-labelledby="hero-heading" class="pt-12 sm:pt-16">
+    <div class="mx-auto max-w-3xl text-center">
       <h1 id="hero-heading" class="display-1">Everyone works with agents. Rarely together.</h1>
-      <p class="lead mt-8 text-muted">
+      <p class="lead mx-auto mt-8 max-w-2xl text-muted">
         Spyria is a self-hosted workspace where people and agents work in the same chats. Everyone can follow an agent's
         work, answer its questions and pick up where a colleague left off.
       </p>
       {
         (installPublished || principlesPublished) && (
-          <p class="title mt-8 flex flex-wrap gap-x-8 gap-y-3">
+          <p class="title mt-8 flex flex-wrap justify-center gap-x-8 gap-y-3">
             {installPublished && <a href="/install" class="highlight-link">Install on your server</a>}
             {principlesPublished && <a href="/principles" class="highlight-link">Read the principles</a>}
           </p>
         )
       }
     </div>
-    <Spires idPrefix="hero-spires" animated class="spires-band h-[min(40vh,20rem)] w-full lg:h-[min(60vh,34rem)]" />
+    <div class="relative isolate mt-12 py-16 sm:mt-16 sm:py-24">
+      <Spires
+        idPrefix="hero-spires"
+        animated
+        class="spires-stage absolute inset-y-0 left-1/2 -z-10 h-full w-screen -translate-x-1/2"
+      />
+      <Transcript class="mx-auto w-full max-w-2xl" />
+    </div>
   </section>
 
   <section aria-labelledby="problem-heading" class="mt-24 max-w-2xl">
@@ -65,35 +69,37 @@ const runIn = 'font-medium text-ink'
         branch in its runtime, the side panel shows files, changes and commits, and the chat owner opens the pull request
         under their own GitHub account.
       </p>
-      <p>
-        <strong class={runIn}>Controls for admins.</strong> Single sign-on per workspace, roles, monthly budgets that stop
-        spend when they are reached, shared tool connections and an audit log.
-      </p>
-    </div>
-  </section>
-
-  <section aria-labelledby="example-heading" class="mt-24">
-    <h2 id="example-heading" class="heading-2 max-w-2xl">One chat, two people, one agent</h2>
-    <div class="mt-10 max-w-2xl">
-      <Transcript />
     </div>
   </section>
 
   <section aria-labelledby="principles-heading" class="mt-24 max-w-2xl">
-    <h2 id="principles-heading" class="heading-2">Built on a few firm choices</h2>
+    <h2 id="principles-heading" class="heading-2">A person behind every agent</h2>
+    <p class="body mt-8">Agents do the work. A person stays responsible for it.</p>
     <ul class="body mt-8 divide-y divide-line border-y border-line text-muted">
       <li class="py-4">
-        <strong class={runIn}>Each member's own model key.</strong> Every model call records who prompted it and whose chat
-        it ran in.
+        <strong class={runIn}>Every agent acts for a person.</strong> It uses the chat owner's tools and rights, and every
+        model and tool call records who prompted it and whose chat it ran in.
       </li>
       <li class="py-4">
-        <strong class={runIn}>Subscriptions stay on your laptop.</strong> Claude Code and Codex sign-ins never reach the server.
+        <strong class={runIn}>A person opens every pull request.</strong> The agent works on a branch, and the chat owner
+        opens the pull request under their own GitHub account.
       </li>
       <li class="py-4">
-        <strong class={runIn}>GitHub tokens never enter a runtime.</strong> The server pushes the agent's work on the owner's
-        behalf.
+        <strong class={runIn}>A shared chat doesn't share your rights.</strong> A colleague prompting in your chat can use
+        only the tools you both have, and anything that writes waits for your approval.
       </li>
-      <li class="py-4"><strong class={runIn}>Budgets stop spend.</strong> They don't just send a warning.</li>
+      <li class="py-4">
+        <strong class={runIn}>Each member's own model key.</strong> Spend belongs to the person who prompted, not to a shared
+        organization key.
+      </li>
+      <li class="py-4">
+        <strong class={runIn}>Claude Code and Codex on your own subscription.</strong> The sign-in stays on your laptop, and
+        the team can still read along.
+      </li>
+      <li class="py-4">
+        <strong class={runIn}>Any provider, any model.</strong> Anthropic, OpenAI, Mistral, Gemini and others, through one
+        gateway you host.
+      </li>
     </ul>
     {
       principlesPublished && (

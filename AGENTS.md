@@ -14,7 +14,7 @@ Stack: Astro (static output), Tailwind v4, Bun for scripts and the lockfile, Clo
 - No gradient heroes, purple glows, bento grids, logo walls, icon-card triplets, stock illustration.
 - **Motion budget:**
   - At most one moving element in any viewport.
-  - The spires live in the Home hero band (60vh at most) and never sit behind body text; opacity 0.5 at most where any text overlaps.
+  - The spires live in the Home hero stage, full width, behind the demo chat card only (card surface at least 90% opaque); never directly behind page text.
   - They pause when off screen (IntersectionObserver) and when the tab is hidden; `prefers-reduced-motion` shows one still frame.
   - No text animates in, no scroll-jacking, no parallax; every word is in the HTML at first paint. Hover and focus transitions take 150 ms at most.
 - **JavaScript budget:** the spires island 15 KB gzip at most; the theme toggle is the one inline script; Pagefind only on docs pages; nothing else ships JavaScript.

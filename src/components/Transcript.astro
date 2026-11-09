@@ -1,69 +1,203 @@
 ---
-const inlineCode = 'rounded-sm bg-sunken text-ink px-1 py-0.5 font-mono text-[0.875em] [overflow-wrap:anywhere]'
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+const iconShapes = {
+  bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  chevronRight: '<path d="m9 18 6-6-6-6"/>',
+  chevronDown: '<path d="m6 9 6 6 6-6"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  gitPullRequest:
+    '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" x2="6" y1="9" y2="21"/>',
+  folder:
+    '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
+  gitBranch: '<path d="M15 6a9 9 0 0 0-9 9V3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>',
+  paperclip:
+    '<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>',
+  arrowUp: '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
+  textSearch:
+    '<path d="M21 5H3"/><path d="M10 12H3"/><path d="M10 19H3"/><circle cx="17" cy="15" r="3"/><path d="m21 19-1.9-1.9"/>',
+}
+
+const iconAttributes = {
+  xmlns: 'http://www.w3.org/2000/svg',
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  'stroke-width': '2',
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round',
+} as const
+
+const messageItem = 'rounded-md px-3 py-2'
+const messageHeader = 'flex items-center gap-2'
+const authorName = 'text-sm font-medium'
+const messageTime = 'text-xs text-muted'
+const messageBody = 'text-sm text-pretty'
+const inlineCode = 'rounded-sm bg-sunken px-1 font-mono text-xs wrap-anywhere'
+const memberAvatar =
+  'flex size-6 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-muted'
+const agentAvatar = 'flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink'
+const stepLine = 'flex max-w-full items-center gap-1.5 text-sm text-muted'
+const stepCard = 'flex flex-col rounded-lg border border-line bg-raised p-3 text-sm'
+const workspaceChip =
+  'flex min-w-0 items-center gap-1.5 rounded-md border border-line bg-raised px-2 py-1 text-xs text-muted'
+const barChip = 'flex min-w-0 items-center gap-1 rounded-md px-2 py-1 text-xs text-muted'
+
+const fileEdits = [
+  { path: 'webhooks/refunds.ts', added: 6, removed: 4 },
+  { path: 'webhooks/refunds.test.ts', added: 25, removed: 0 },
+]
 ---
 
-<figure class="min-w-0">
-  <div class="rounded-xl border border-line bg-raised">
-    <p class="caption flex flex-wrap items-center gap-x-2 border-b border-line px-4 py-3 text-muted sm:px-6">
-      Dev chat on <code class={inlineCode}>acme/payments-api</code>
-    </p>
-    <ol class="space-y-6 px-4 py-6 sm:px-6">
-      <li class="transcript-message">
-        <span class="transcript-avatar" aria-hidden="true">CD</span>
-        <div class="min-w-0">
-          <p class="title">Camille Duciel</p>
-          <p class="body mt-1">
-            The refund webhook retries forever when the provider answers 409. Can you find where we decide to retry?
-          </p>
-        </div>
-      </li>
-      <li class="transcript-message">
-        <img class="transcript-avatar" src="/favicon.svg" alt="" width="32" height="32" />
-        <div class="min-w-0">
-          <p class="title">Agent</p>
-          <p class="body mt-1">
-            <code class={inlineCode}>shouldRetry()</code> in <code class={inlineCode}>webhooks/refunds.ts</code> treats every
-            4xx except 404 as worth retrying. A 409 means the refund already exists, so it should stop there. I'll change the
-            rule and add a test.
-          </p>
-          <p class="caption mt-3 flex flex-wrap gap-x-2 border-l-2 border-line pl-3 text-muted">
-            <span>Edited 2 files</span><span aria-hidden="true">·</span><span>Ran the tests: 48 passed</span>
-          </p>
-        </div>
-      </li>
-      <li class="transcript-message">
-        <img class="transcript-avatar" src="/favicon.svg" alt="" width="32" height="32" />
-        <div class="min-w-0">
-          <p class="title">Agent</p>
-          <p class="body mt-1">Should a 409 also mark the refund as settled, or only stop the retries?</p>
-        </div>
-      </li>
-      <li class="transcript-message">
-        <span class="transcript-avatar" aria-hidden="true">SC</span>
-        <div class="min-w-0">
-          <p class="title">Salim Condo</p>
-          <p class="body mt-1">Only stop the retries. Settlement comes from the provider's own event.</p>
-        </div>
-      </li>
-      <li class="transcript-message">
-        <img class="transcript-avatar" src="/favicon.svg" alt="" width="32" height="32" />
-        <div class="min-w-0">
-          <p class="title">Agent</p>
-          <p class="body mt-1">Done. The branch <code class={inlineCode}>fix/refund-409-retry</code> has one commit.</p>
-          <div class="mt-3 rounded-lg border border-line bg-page px-4 py-3">
-            <p class="title">Stop retrying refunds on 409</p>
-            <p class="caption mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
-              <span>#412</span>
-              <span class="rounded-sm border border-callout-edge bg-callout px-1.5 text-ink">Open</span>
-              <span>2 files changed, <span class="text-code-string">+31</span> <span class="text-code-keyword">−4</span></span>
-              <span>opened by Camille Duciel</span>
-            </p>
-          </div>
-        </div>
-      </li>
-    </ol>
+<figure
+  aria-label="Example: a dev chat in Spyria"
+  class:list={[
+    'flex min-w-0 flex-col gap-4 rounded-2xl border border-card-edge bg-raised/90 p-4 text-left text-ink shadow-xl',
+    className,
+  ]}
+>
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+    <div class="flex min-w-0 items-center gap-2">
+      <svg aria-hidden="true" {...iconAttributes} class="size-5 shrink-0 text-muted"><Fragment set:html={iconShapes.bot} /></svg>
+      <p class="truncate text-xl font-medium sm:text-2xl">Refund retries on 409</p>
+      <span class="shrink-0 rounded-full border border-line px-2 py-0.5 text-xs">PR #412 · open</span>
+    </div>
+    <div class="ml-auto flex min-w-0 items-center gap-x-2">
+      <span class="min-w-0 truncate text-sm text-muted">
+        Agent acts as <strong class="font-medium text-ink">Camille Duciel</strong>
+      </span>
+      <span class="rounded-md p-1.5 text-muted">
+        <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.textSearch} /></svg>
+      </span>
+    </div>
   </div>
-  <figcaption class="caption mt-3 max-w-2xl text-muted">
-    Salim answered the agent's question in Camille's chat. Each prompt runs on the key of the member who sent it.
-  </figcaption>
+
+  <ol class="flex flex-col gap-1">
+    <li class={messageItem}>
+      <div class={messageHeader}>
+        <span class={memberAvatar} aria-hidden="true">CD</span>
+        <span class={authorName}>Camille Duciel</span>
+        <time datetime="10:42" class={messageTime}>10:42</time>
+      </div>
+      <p class={messageBody}>
+        The refund webhook retries forever when the provider answers 409. Can you find where we decide to retry?
+      </p>
+    </li>
+    <li class={messageItem}>
+      <div class={messageHeader}>
+        <span class={agentAvatar}>
+          <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.bot} /></svg>
+        </span>
+        <span class={authorName}>Agent</span>
+        <time datetime="10:43" class={messageTime}>10:43</time>
+      </div>
+      <p class={messageBody}>
+        <code class={inlineCode}>shouldRetry()</code> in <code class={inlineCode}>webhooks/refunds.ts</code> treats every
+        4xx except 404 as worth retrying. A 409 means the refund already exists, so it should stop there. I'll change the
+        rule and add a test.
+      </p>
+    </li>
+    {
+      fileEdits.map(({ path, added, removed }) => (
+        <li class={messageItem}>
+          <p class={stepLine}>
+            <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0">
+              <Fragment set:html={iconShapes.chevronRight} />
+            </svg>
+            <span class="min-w-0 wrap-anywhere">
+              Edited <span class="text-ink">{path}</span>{' '}
+              <span class="font-mono text-xs">
+                +{added} −{removed}
+              </span>
+            </span>
+          </p>
+        </li>
+      ))
+    }
+    <li class={messageItem}>
+      <p class={stepLine}>
+        <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0"><Fragment set:html={iconShapes.chevronRight} /></svg>
+        <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 text-green-500"><Fragment set:html={iconShapes.check} /></svg>
+        <code class="truncate font-mono text-ink">$ bun test webhooks</code>
+        <span class="shrink-0 text-xs">Succeeded · 1.8s</span>
+      </p>
+    </li>
+    <li class={messageItem}>
+      <div class:list={[stepCard, 'gap-3']}>
+        <div class="flex flex-col gap-1.5">
+          <p class="mb-1">Should a 409 also mark the refund as settled, or only stop the retries?</p>
+          <p>Only stop the retries. Settlement comes from the provider's own event.</p>
+        </div>
+        <p class="text-xs text-muted">Answered by Salim Condo</p>
+      </div>
+    </li>
+    <li class={messageItem}>
+      <div class={messageHeader}>
+        <span class={agentAvatar}>
+          <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.bot} /></svg>
+        </span>
+        <span class={authorName}>Agent</span>
+        <time datetime="10:51" class={messageTime}>10:51</time>
+      </div>
+      <p class={messageBody}>Done. The branch <code class={inlineCode}>fix/refund-409-retry</code> has one commit.</p>
+    </li>
+    <li class={messageItem}>
+      <div class:list={[stepCard, 'gap-2']}>
+        <div class="flex flex-wrap items-center gap-2">
+          <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 text-muted">
+            <Fragment set:html={iconShapes.gitPullRequest} />
+          </svg>
+          <span class="font-medium">Stop retrying refunds on 409</span>
+          <span class="text-muted">#412</span>
+          <span class="rounded-full bg-added px-2 py-0.5 text-xs">open</span>
+        </div>
+        <p class="text-xs text-muted">2 files changed · +31 −4 · opened by Camille Duciel</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex min-w-0 gap-2">
+      <span class={workspaceChip}>
+        <svg aria-hidden="true" {...iconAttributes} class="size-3 shrink-0"><Fragment set:html={iconShapes.folder} /></svg>
+        <span class="truncate">acme/payments-api</span>
+      </span>
+      <span class={workspaceChip}>
+        <svg aria-hidden="true" {...iconAttributes} class="size-3 shrink-0"><Fragment set:html={iconShapes.gitBranch} /></svg>
+        <span class="truncate">fix/refund-409-retry</span>
+      </span>
+    </div>
+    <div class="rounded-xl border border-line bg-raised">
+      <div class="flex items-end gap-1 p-2">
+        <span class="min-h-8 min-w-0 flex-1"></span>
+        <span class="rounded-full p-2 text-muted">
+          <svg aria-hidden="true" {...iconAttributes} class="size-4.5"><Fragment set:html={iconShapes.paperclip} /></svg>
+        </span>
+        <span class="rounded-full bg-accent p-2 text-accent-ink opacity-40">
+          <svg aria-hidden="true" {...iconAttributes} class="size-4.5"><Fragment set:html={iconShapes.arrowUp} /></svg>
+        </span>
+      </div>
+      <div class="flex min-w-0 flex-wrap items-center gap-1 border-t border-line px-1.5 py-1">
+        <span class="flex min-w-0 items-center gap-1.5 pr-2">
+          <span class={barChip}>
+            Spyria runtime
+            <svg aria-hidden="true" {...iconAttributes} class="size-3 shrink-0"><Fragment set:html={iconShapes.chevronDown} /></svg>
+          </span>
+          <span aria-hidden="true" class="text-xs text-muted">·</span>
+          <span class="inline-flex items-center gap-1.5 text-xs text-muted">
+            <span aria-hidden="true" class="size-1.5 shrink-0 rounded-full bg-green-500"></span>
+            Ready
+          </span>
+        </span>
+        <span class={barChip}>
+          Sonnet 5.5 (medium)
+          <svg aria-hidden="true" {...iconAttributes} class="size-3 shrink-0"><Fragment set:html={iconShapes.chevronDown} /></svg>
+        </span>
+      </div>
+    </div>
+  </div>
 </figure>
