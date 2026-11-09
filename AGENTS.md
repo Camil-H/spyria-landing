@@ -38,7 +38,7 @@ bun run check           # typecheck, lint, test:unit, build, check:links, check:
 ## Docs from the product repository
 
 - `product.ref` holds the full commit SHA of the product the docs are built from. `scripts/sync-product.ts` (run by `dev`, `build` and `typecheck`) checks out the product's `docs/` (and `install.sh` once it exists) at that commit into `.product/` (gitignored, never edited by hand), with each page's last-changed date in `.product/docs-dates.json`. It skips the fetch when `.product/` already matches the ref.
-- While the product repository is private, the sync needs a token that can read it: `PRODUCT_REPO_TOKEN` (CI, Cloudflare builds), or the GitHub CLI's login locally. Once the repository is public, no token is needed.
+- The product repository is public: the sync needs no token.
 - `src/docs/` turns those files into pages: the sidebar follows `docs/README.md` and the decision table, links between docs become site links and links elsewhere in the product become GitHub links at `product.ref`, Mermaid diagrams become inline SVG at build time, code colours are classes (the Content-Security-Policy allows no inline style). Each page also has a Markdown twin at its path with `.md`.
 - A push to the product's `main` that touches `docs/**` dispatches `product-docs-changed`; `.github/workflows/sync.yml` then opens or updates the pull request "docs: sync to <sha>" from `sync/product-docs`. Run it by hand from the Actions tab with a commit SHA to move the docs to any product commit.
 
