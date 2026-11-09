@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import { docsPublished } from '../src/site'
 
 const pages = [
-  { name: 'Home', path: '/', heading: "Coding agents are single-player. Your team isn't." },
+  { name: 'Home', path: '/', heading: 'Everyone works with agents. Rarely together.' },
   { name: '404', path: '/a-page-that-does-not-exist', heading: 'This page does not exist' },
 ]
 

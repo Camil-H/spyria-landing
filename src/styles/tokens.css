@@ -73,7 +73,7 @@
   );
   --color-spire-light: light-dark(var(--color-primary-700), var(--color-primary-300));
   --color-spire-glow: light-dark(
-    color-mix(in oklab, var(--color-primary-200) 70%, transparent),
+    color-mix(in oklab, var(--color-primary-200) 35%, transparent),
     color-mix(in oklab, var(--color-primary-500) 16%, transparent)
   );
 }

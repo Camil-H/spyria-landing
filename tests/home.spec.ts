@@ -1,8 +1,8 @@
 import { expect, type Page, test } from '@playwright/test'
 
-const homeHeading = "Coding agents are single-player. Your team isn't."
+const homeHeading = 'Everyone works with agents. Rarely together.'
 const homeSections = [
-  { heading: 'Agents are single-player today', text: 'someone pastes a transcript into Slack' },
+  { heading: 'Working with agents is still a solo act', text: 'someone pastes a transcript into Slack' },
   {
     heading: 'One workspace for people and agents',
     text: 'Projects, channels, threads and agent chats in one sidebar',

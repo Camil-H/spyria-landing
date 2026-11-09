@@ -16,7 +16,7 @@ const runIn = 'font-medium text-ink'
     class="grid items-center gap-y-10 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-12"
   >
     <div class="max-w-2xl">
-      <h1 id="hero-heading" class="display-1">Coding agents are single-player. Your team isn't.</h1>
+      <h1 id="hero-heading" class="display-1">Everyone works with agents. Rarely together.</h1>
       <p class="lead mt-8 text-muted">
         Spyria is a self-hosted workspace where people and agents work in the same chats. Everyone can follow an agent's
         work, answer its questions and pick up where a colleague left off.
@@ -34,14 +34,17 @@ const runIn = 'font-medium text-ink'
   </section>
 
   <section aria-labelledby="problem-heading" class="mt-24 max-w-2xl">
-    <h2 id="problem-heading" class="heading-2">Agents are <span class="whitespace-nowrap">single-player</span> today</h2>
+    <h2 id="problem-heading" class="heading-2">Working with agents is still a solo act</h2>
     <div class="body mt-8 space-y-6">
       <p>
-        Each person has their own chat window, and each laptop runs its own coding agent. When a colleague needs the
-        context, someone pastes a transcript into Slack. The agent's questions wait for the one person who started it. API
-        keys live in a password manager, and nobody sees the spend until the invoice arrives.
+        Each person works with their own agents, in their own chat window or on their own laptop. An agent may run
+        sub-agents of its own, but the people around it never see that work. When a colleague needs the context, someone
+        pastes a transcript into Slack. The agent's questions wait for the one person who started it. API keys live in a
+        password manager, and nobody sees the spend until the invoice arrives.
       </p>
-      <p>Teams already know how to work together in shared channels. Their agents don't.</p>
+      <p>
+        Teams already know how to work together in shared channels. Their work with agents hasn't joined them there.
+      </p>
     </div>
   </section>
 
@@ -71,15 +74,8 @@ const runIn = 'font-medium text-ink'
 
   <section aria-labelledby="example-heading" class="mt-24">
     <h2 id="example-heading" class="heading-2 max-w-2xl">One chat, two people, one agent</h2>
-    <div class="mt-10 grid items-start gap-8 lg:grid-cols-2">
+    <div class="mt-10 max-w-2xl">
       <Transcript />
-      <div
-        role="img"
-        aria-label="Screenshot of this chat in Spyria, coming soon"
-        class="caption hidden aspect-[4/3] place-items-center rounded-xl border border-line px-6 text-center text-muted lg:grid"
-      >
-        A screenshot of this chat in Spyria will appear here.
-      </div>
     </div>
   </section>
 
