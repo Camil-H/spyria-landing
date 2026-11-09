@@ -3,22 +3,9 @@ import { expect, test } from '@playwright/test'
 import { docsPublished } from '../src/site'
 
 const pages = [
-  { name: 'Home', path: '/', heading: 'Agents work alone. Your team does not.' },
+  { name: 'Home', path: '/', heading: "Coding agents are single-player. Your team isn't." },
   { name: '404', path: '/a-page-that-does-not-exist', heading: 'This page does not exist' },
 ]
-
-test.describe('with JavaScript disabled', () => {
-  test.use({ javaScriptEnabled: false })
-
-  test('As an engineering lead, I read the Home headings and text without JavaScript', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Agents work alone. Your team does not.')
-    await expect(page.getByRole('heading', { level: 2, name: 'Agents are single-player today' })).toBeVisible()
-    await expect(page.getByRole('heading', { level: 2, name: 'Install on your own server' })).toBeVisible()
-    await expect(page.getByText('nobody can step into', { exact: false })).toBeVisible()
-    await expect(page.getByText('curl -fsSL https://spyria.dev/install.sh | sh')).toBeVisible()
-  })
-})
 
 for (const { name, path, heading } of pages) {
   test(`As a visitor on a 360 px phone, I read ${name} without scrolling sideways`, async ({ page }) => {

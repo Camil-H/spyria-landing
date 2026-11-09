@@ -1,47 +1,131 @@
 ---
+import Spires from '../components/Spires.astro'
+import Transcript from '../components/Transcript.astro'
 import Page from '../layouts/Page.astro'
+import { installPublished, principlesPublished } from '../site'
+
+const runIn = 'font-medium text-ink'
 ---
 
 <Page
-  title="Spyria"
-  description="A self-hosted workspace where your team and its agents work in the same chats, on your servers and with your own model keys."
+  title="Spyria: a shared workspace for teams and their agents"
+  description="A self-hosted workspace where your team and its AI agents share chats, sandboxed runtimes and pull requests. Your keys, your servers, your sign-in."
 >
-  <section aria-labelledby="hero-heading" class="max-w-3xl pt-16 pb-20 sm:pt-24">
-    <h1 id="hero-heading" class="display-1">Agents work alone. Your team does not.</h1>
-    <p class="lead mt-6 max-w-2xl text-muted">
-      Spyria is a workspace where members and agents work in the same chats and channels, on servers you run.
-    </p>
+  <section
+    aria-labelledby="hero-heading"
+    class="grid items-center gap-y-10 pt-12 sm:pt-16 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-x-12"
+  >
+    <div class="max-w-2xl">
+      <h1 id="hero-heading" class="display-1">Coding agents are single-player. Your team isn't.</h1>
+      <p class="lead mt-8 text-muted">
+        Spyria is a self-hosted workspace where people and agents work in the same chats. Everyone can follow an agent's
+        work, answer its questions and pick up where a colleague left off.
+      </p>
+      {
+        (installPublished || principlesPublished) && (
+          <p class="title mt-8 flex flex-wrap gap-x-8 gap-y-3">
+            {installPublished && <a href="/install" class="highlight-link">Install on your server</a>}
+            {principlesPublished && <a href="/principles" class="highlight-link">Read the principles</a>}
+          </p>
+        )
+      }
+    </div>
+    <Spires idPrefix="hero-spires" animated class="spires-band h-[min(40vh,20rem)] w-full lg:h-[min(60vh,34rem)]" />
   </section>
 
-  <section aria-labelledby="problem-heading" class="max-w-2xl">
+  <section aria-labelledby="problem-heading" class="mt-24 max-w-2xl">
     <h2 id="problem-heading" class="heading-2">Agents are <span class="whitespace-nowrap">single-player</span> today</h2>
-    <div class="body mt-6 space-y-5">
+    <div class="body mt-8 space-y-6">
       <p>
-        Each person has their own chat window, and each laptop has its own coding agent. When a colleague needs the
-        context, someone pastes a transcript into Slack. Keys are shared through a password manager, and the bill shows
-        up at the end of the month.
+        Each person has their own chat window, and each laptop runs its own coding agent. When a colleague needs the
+        context, someone pastes a transcript into Slack. The agent's questions wait for the one person who started it. API
+        keys live in a password manager, and nobody sees the spend until the invoice arrives.
+      </p>
+      <p>Teams already know how to work together in shared channels. Their agents don't.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="workspace-heading" class="mt-24 max-w-2xl">
+    <h2 id="workspace-heading" class="heading-2">One workspace for people and agents</h2>
+    <div class="body mt-8 space-y-6 text-muted">
+      <p>
+        <strong class={runIn}>Chats and channels.</strong> Projects, channels, threads and agent chats in one sidebar. Start
+        an agent from a channel thread, invite a colleague into its chat, or fork it to try another approach.
       </p>
       <p>
-        Nobody can step into a colleague's agent session to answer its question or take over the work. Spyria puts that
-        session in a chat the whole team can open. Read <a href="#problem-heading" class="highlight-link">why agents
-        should be shared</a>.
+        <strong class={runIn}>Agents in sandboxes.</strong> Each agent chat gets its own runtime container on a machine you
+        run. Pi runs there on the prompting member's API key. Claude Code and Codex run on a member's own laptop with their
+        own subscription, and the rest of the team can read along.
       </p>
-      <ul class="list-disc space-y-2 pl-6 marker:text-muted">
-        <li>Agents run in sandboxed runtimes on your servers or on a member's own machine.</li>
-        <li>Dev chats open pull requests on your repositories.</li>
-        <li>Admins set roles, single sign-on and budgets.</li>
-      </ul>
       <p>
-        Each prompt uses the model key of the member who wrote it, and the workspace records both the prompter and the
-        owner of the chat. Each member sees their own spend under <code class="rounded-sm bg-sunken px-1.5 py-0.5 text-[0.875em]">Profile &gt; My usage</code>.
+        <strong class={runIn}>Pull requests from a chat.</strong> Attach a chat to a GitHub repository. The agent works on a
+        branch in its runtime, the side panel shows files, changes and commits, and the chat owner opens the pull request
+        under their own GitHub account.
+      </p>
+      <p>
+        <strong class={runIn}>Controls for admins.</strong> Single sign-on per workspace, roles, monthly budgets that stop
+        spend when they are reached, shared tool connections and an audit log.
       </p>
     </div>
   </section>
 
-  <section aria-labelledby="install-heading" class="mt-20 max-w-2xl">
-    <h2 id="install-heading" class="heading-2">Install on your own server</h2>
-    <p class="body mt-6">One Compose file runs the whole workspace, with your Postgres and your keys.</p>
-    <pre
-      class="mt-6 rounded-xl whitespace-pre-wrap [overflow-wrap:anywhere] border border-line bg-sunken p-4 text-sm leading-6"><code>curl -fsSL https://spyria.dev/install.sh | sh</code></pre>
+  <section aria-labelledby="example-heading" class="mt-24">
+    <h2 id="example-heading" class="heading-2 max-w-2xl">One chat, two people, one agent</h2>
+    <div class="mt-10 grid items-start gap-8 lg:grid-cols-2">
+      <Transcript />
+      <div
+        role="img"
+        aria-label="Screenshot of this chat in Spyria, coming soon"
+        class="caption hidden aspect-[4/3] place-items-center rounded-xl border border-line px-6 text-center text-muted lg:grid"
+      >
+        A screenshot of this chat in Spyria will appear here.
+      </div>
+    </div>
   </section>
+
+  <section aria-labelledby="principles-heading" class="mt-24 max-w-2xl">
+    <h2 id="principles-heading" class="heading-2">Built on a few firm choices</h2>
+    <ul class="body mt-8 divide-y divide-line border-y border-line text-muted">
+      <li class="py-4">
+        <strong class={runIn}>Each member's own model key.</strong> Every model call records who prompted it and whose chat
+        it ran in.
+      </li>
+      <li class="py-4">
+        <strong class={runIn}>Subscriptions stay on your laptop.</strong> Claude Code and Codex sign-ins never reach the server.
+      </li>
+      <li class="py-4">
+        <strong class={runIn}>GitHub tokens never enter a runtime.</strong> The server pushes the agent's work on the owner's
+        behalf.
+      </li>
+      <li class="py-4"><strong class={runIn}>Budgets stop spend.</strong> They don't just send a warning.</li>
+    </ul>
+    {
+      principlesPublished && (
+        <p class="title mt-6">
+          <a href="/principles" class="highlight-link">All the principles, and why</a>
+        </p>
+      )
+    }
+  </section>
+
+  <section aria-labelledby="self-hosted-heading" class="mt-24 max-w-2xl">
+    <h2 id="self-hosted-heading" class="heading-2">Runs on your servers</h2>
+    <div class="body mt-8 space-y-6">
+      <p>
+        One Docker Compose file runs Postgres, the server, the sync service and the model gateway. Runtime hosts dial out to
+        it, so a VM or a laptop can run agents without opening a port. People sign in through your own identity provider:
+        Google Workspace, Microsoft Entra or any OIDC provider.
+      </p>
+      <p>
+        You need a machine with Docker, an HTTPS address and an identity provider.
+        {installPublished && <a href="/install" class="highlight-link">Read the install guide</a>}
+      </p>
+    </div>
+    <p class="caption mt-8 text-muted">
+      Source available under the Business Source License 1.1. Free in production for organizations with up to 10 members;
+      each version becomes Apache 2.0 two years after its release.
+    </p>
+  </section>
+
+  <Spires idPrefix="footer-spires" slot="footer" class="spires-still mt-10 h-32 w-full" />
 </Page>

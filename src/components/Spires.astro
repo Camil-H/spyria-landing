@@ -1,0 +1,22 @@
+---
+import { spiresMarkupOf } from '../spires/scene'
+
+interface Props {
+  idPrefix: string
+  animated?: boolean
+  class?: string
+}
+
+const { idPrefix, animated = false, class: className } = Astro.props
+---
+
+<svg
+  aria-hidden="true"
+  focusable="false"
+  class:list={['pointer-events-none', className]}
+  viewBox="0 0 100 100"
+  preserveAspectRatio="xMidYMid slice"
+  data-spires-animated={animated ? idPrefix : undefined}
+  set:html={spiresMarkupOf(idPrefix, true)}
+/>
+{animated && <script>import '../spires/animate'</script>}

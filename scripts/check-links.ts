@@ -1,8 +1,6 @@
 import { Glob } from 'bun'
 import { builtHtmlPages, distDirectory } from './built-site'
 
-const pagesBuiltInLaterStages = new Set(['/principles', '/install'])
-
 const pages = await builtHtmlPages()
 const idsByPage = new Map(pages.map(({ path, html }) => [pagePathOf(path), idsIn(html)]))
 const brokenLinks: string[] = []
@@ -27,7 +25,6 @@ async function checkLinks(path: string, sourcePage: string, hrefs: string[]) {
     const target = new URL(href, `https://spyria.dev${sourcePage}`)
     const targetPage = target.pathname.replace(/\/$/, '') || '/'
     const anchor = decodeURIComponent(target.hash.slice(1))
-    if (pagesBuiltInLaterStages.has(targetPage) && !idsByPage.has(targetPage)) continue
     const targetIds = idsByPage.get(targetPage)
     const isAsset = !targetIds && (await Bun.file(distDirectory + targetPage.slice(1)).exists())
     if (!targetIds && !isAsset) brokenLinks.push(`${path}: ${href} (no such page)`)
