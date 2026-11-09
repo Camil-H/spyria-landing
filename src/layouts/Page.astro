@@ -5,10 +5,13 @@ import { docsPublished, navigation, productLicenseUrl, productRepositoryUrl } fr
 interface Props {
   title: string
   description: string
+  socialCard?: { path: string; alt: string }
 }
 
-const { title, description } = Astro.props
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+const homeSocialCard = { path: '/og/home.png', alt: 'Spyria: Everyone works with agents. Rarely together.' }
+const { title, description, socialCard = homeSocialCard } = Astro.props
+const socialCardUrl = new URL(socialCard.path, Astro.site)
+const canonicalUrl = new URL(Astro.url.pathname.replace(/(\/index)?\.html$/, '') || '/', Astro.site)
 const fullTitle = title.startsWith('Spyria') ? title : `${title} · Spyria`
 const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN
 const currentPath = Astro.url.pathname
@@ -28,7 +31,16 @@ const currentPath = Astro.url.pathname
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={socialCardUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialCard.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialCardUrl} />
+    <meta name="twitter:image:alt" content={socialCard.alt} />
     <script is:inline data-theme-script>
 (() => {
   const root = document.documentElement

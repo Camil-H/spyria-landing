@@ -35,7 +35,9 @@ for (const scriptFile of shippedScriptFiles) {
 
 const headers = await Bun.file(`${distDirectory}_headers`).text()
 for (const { path, html } of pages) {
-  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
+  const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)].filter(
+    ([, attributes]) => !attributes?.includes('type="application/ld+json"'),
+  )
   const themeScripts = scripts.filter(([, attributes]) => /\sdata-theme-script\b/.test(` ${attributes}`))
   const searchScripts = scripts.filter(([, attributes]) => attributes?.includes(`src="${searchScriptUrl}"`))
   const isHome = path === 'index.html'

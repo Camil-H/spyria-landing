@@ -30,7 +30,8 @@ bun install
 bun run sync            # fetch the product docs at product.ref into .product/
 bun run dev             # http://localhost:4321
 bun run build           # sync, dist/, then the Pagefind index in dist/pagefind/
-bun run check           # typecheck, lint, test:unit, build, check:links, check:budgets, test
+bun run check           # typecheck, lint, test:unit, build, check:links, check:budgets, check:search, test
+bun run og              # redraw the social card public/og/home.png with Playwright (run by hand, commit the PNG)
 ```
 
 `bunx biome check --write .` fixes formatting and import order. `PUBLIC_CF_ANALYTICS_TOKEN` at build time adds the Cloudflare Web Analytics beacon.
@@ -44,7 +45,7 @@ bun run check           # typecheck, lint, test:unit, build, check:links, check:
 
 ## Tests
 
-- **Build checks** (`scripts/`, over `dist/`): `check:links` fails on any internal link or `#anchor` that does not resolve; links to pages not yet published stay hidden behind their switch in `src/site.ts` (`docsPublished`, `principlesPublished`, `installPublished`). `check:links` also follows the links of the Markdown twins. `check:budgets` fails on any script beyond the allowed ones (the spires bundle only on Home and at most 15 KB gzip, the docs search only on docs pages), on an inline theme script the `public/_headers` Content-Security-Policy does not allow by hash, on any inline `style` the policy would block, and on a Home transfer above 300 KB.
+- **Build checks** (`scripts/`, over `dist/`): `check:links` fails on any internal link or `#anchor` that does not resolve; links to pages not yet published stay hidden behind their switch in `src/site.ts` (`docsPublished`, `principlesPublished`, `installPublished`). `check:links` also follows the links of the Markdown twins. `check:budgets` fails on any script beyond the allowed ones (the spires bundle only on Home and at most 15 KB gzip, the docs search only on docs pages), on an inline theme script the `public/_headers` Content-Security-Policy does not allow by hash, on any inline `style` the policy would block, and on a Home transfer above 300 KB. `check:search` fails on a page without a unique title (60 characters at most), a description (155 at most), its canonical URL, one `h1`, `lang="en"` or a social card; on JSON-LD that does not parse or has no `@type`; on a `sitemap.xml` that is not exactly the published pages with their `lastmod`; on a `robots.txt` with a `Disallow` or without the sitemap; and on an `llms.txt` whose site links do not resolve or that misses a docs page.
 - **Unit** (`bun run test:unit`, `*.test.ts` next to the file in `src/`): link rewriting, sidebar parsing, Markdown twins.
 - **Playwright** (`tests/`, Chromium, against `wrangler dev` serving the built site, so `public/_headers` and its Content-Security-Policy apply): one user story per test, titled "As <role>, I …"; no JavaScript, 360 px width, theme, axe in light and dark.
 - No pixel baselines; the reviewer judges the looks from the pull request screenshots. Never weaken an assertion to make a check pass; if a check must change, say so in the pull request.

@@ -11,9 +11,11 @@
     "lint": "biome check .",
     "test:unit": "bun test ./src",
     "test": "playwright test",
+    "og": "bun scripts/og-card.ts",
     "check:links": "bun scripts/check-links.ts",
     "check:budgets": "bun scripts/check-budgets.ts",
-    "check": "bun run typecheck && bun run lint && bun run test:unit && bun run build && bun run check:links && bun run check:budgets && bun run test"
+    "check:search": "bun scripts/check-search.ts",
+    "check": "bun run typecheck && bun run lint && bun run test:unit && bun run build && bun run check:links && bun run check:budgets && bun run check:search && bun run test"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.7",
