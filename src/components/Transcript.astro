@@ -12,6 +12,7 @@ import {
   messageItem,
   messageTime,
 } from './product-look'
+import QuestionAnswerViews from './QuestionAnswerViews.astro'
 
 interface Props {
   class?: string
@@ -26,13 +27,6 @@ const stepCard = 'flex flex-col rounded-lg border border-line bg-raised p-3 text
 const workspaceChip =
   'flex min-w-0 items-center gap-1.5 rounded-md border border-line bg-raised px-2 py-1 text-xs text-muted'
 const barChip = 'flex min-w-0 items-center gap-1 rounded-md px-2 py-1 text-xs text-muted'
-
-const submitButton = 'rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-ink'
-const skipButton = 'rounded-full border border-line px-4 py-1.5 text-sm text-ink'
-const answerOptions = [
-  { label: 'Only stop the retries', description: "Settlement stays with the provider's event", isSalimChoice: true },
-  { label: 'Also mark it as settled', description: 'A 409 closes the refund', isSalimChoice: false },
-]
 
 const fileEdits = [
   { path: 'webhooks/refunds.ts', added: 6, removed: 4, storyStep: 'editRefunds' },
@@ -126,37 +120,7 @@ const fileEdits = [
     <li class={messageItem} data-story-step="agentQuestion">
       <div class:list={[stepCard, 'gap-3']}>
         <p>Should a 409 also mark the refund as settled, or only stop the retries?</p>
-        <div class="grid">
-          <div class="col-start-1 row-start-1 flex flex-col gap-3" aria-hidden="true" data-story-replaced="questionOptions">
-            <div class="flex flex-col gap-1.5">
-              {
-                answerOptions.map(({ label, description, isSalimChoice }) => (
-                  <p class="flex items-baseline gap-2">
-                    <span class="relative top-0.5 size-3.5 shrink-0 rounded-full border border-muted">
-                      {isSalimChoice && (
-                        <span
-                          class="absolute -inset-px flex items-center justify-center rounded-full border-4 border-accent bg-raised"
-                          data-story-step="salimChoice"
-                        />
-                      )}
-                    </span>
-                    <span>
-                      {label} <span class="text-xs text-muted">{description}</span>
-                    </span>
-                  </p>
-                ))
-              }
-            </div>
-            <div class="flex gap-2">
-              <span class={submitButton} data-story-press="submitAnswer">Submit</span>
-              <span class={skipButton}>Skip</span>
-            </div>
-          </div>
-          <div class="col-start-1 row-start-1 flex flex-col justify-between gap-1.5" data-story-step="salimAnswer">
-            <p>Only stop the retries</p>
-            <p class="text-xs text-muted">Answered by Salim Condo</p>
-          </div>
-        </div>
+        <QuestionAnswerViews />
       </div>
     </li>
     <li class={messageItem} data-story-step="agentDone">
@@ -180,6 +144,11 @@ const fileEdits = [
           <span class="rounded-full bg-added px-2 py-0.5 text-xs">open</span>
         </div>
         <p class="text-xs text-muted">2 files changed · +31 −4 · opened by Camille Duciel</p>
+      </div>
+    </li>
+    <li class:list={[messageItem, 'invisible']}>
+      <div class:list={[stepCard, 'border-transparent bg-transparent']}>
+        <QuestionAnswerViews isSpacer />
       </div>
     </li>
   </ol>
