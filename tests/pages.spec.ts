@@ -40,7 +40,7 @@ test('While the docs are unpublished, /docs and its Markdown copies are not serv
 for (const colorScheme of ['light', 'dark'] as const) {
   test(`Home has no serious or critical accessibility violation in ${colorScheme}`, async ({ page }) => {
     test.slow()
-    await page.emulateMedia({ colorScheme })
+    await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' })
     await page.goto('/')
     const results = await new AxeBuilder({ page }).exclude('svg[aria-hidden="true"]').analyze()
     const blocking = results.violations.filter(({ impact }) => impact === 'serious' || impact === 'critical')

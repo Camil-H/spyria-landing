@@ -36,8 +36,8 @@ const actionsAfterRuntime = [iconShapes.clipboardCopy, iconShapes.link]
   </div>
 
   <ol class="flex flex-col gap-1 pt-12">
-    <li class:list={[messageItem, 'relative']}>
-      <div class="story-step story-actions absolute -top-5 right-2">
+    <li class:list={[messageItem, 'relative']} data-story-step="salimMessage">
+      <div class="absolute -top-5 right-2" data-story-step="actions">
         <p class="absolute right-0 bottom-full mb-2 rounded-md border border-line bg-raised px-2 py-1 text-xs whitespace-nowrap text-ink shadow-lg">
           Start runtime from this message
         </p>
@@ -49,7 +49,7 @@ const actionsAfterRuntime = [iconShapes.clipboardCopy, iconShapes.link]
               </span>
             ))
           }
-          <span class="story-press rounded-md bg-hover p-1 text-ink">
+          <span class="rounded-md bg-hover p-1 text-ink" data-story-press>
             <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.squareTerminal} /></svg>
           </span>
           {
@@ -70,9 +70,9 @@ const actionsAfterRuntime = [iconShapes.clipboardCopy, iconShapes.link]
         Acme says the provider keeps calling our refund webhook: more than 200 calls for one refund since yesterday. Can
         someone take a look?
       </p>
-      <p class="story-step story-runtime-link mt-1 text-xs text-muted underline">Runtime: Refund retries on 409</p>
+      <p class="mt-1 text-xs text-muted underline" data-story-step="runtimeLink">Runtime: Refund retries on 409</p>
     </li>
-    <li class="story-step story-reply px-3">
+    <li class="px-3" data-story-step="camilleReply">
       <p class="flex items-center gap-1.5 text-sm text-muted">
         <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 rotate-90">
           <Fragment set:html={iconShapes.chevronRight} />

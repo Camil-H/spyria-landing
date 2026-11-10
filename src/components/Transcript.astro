@@ -28,8 +28,8 @@ const workspaceChip =
 const barChip = 'flex min-w-0 items-center gap-1 rounded-md px-2 py-1 text-xs text-muted'
 
 const fileEdits = [
-  { path: 'webhooks/refunds.ts', added: 6, removed: 4 },
-  { path: 'webhooks/refunds.test.ts', added: 25, removed: 0 },
+  { path: 'webhooks/refunds.ts', added: 6, removed: 4, storyStep: 'editRefunds' },
+  { path: 'webhooks/refunds.test.ts', added: 25, removed: 0, storyStep: 'editTest' },
 ]
 ---
 
@@ -42,7 +42,7 @@ const fileEdits = [
       <div class="flex min-w-0 items-center gap-2">
         <svg aria-hidden="true" {...iconAttributes} class="size-5 shrink-0 text-muted"><Fragment set:html={iconShapes.bot} /></svg>
         <p class={chatTitle}>Refund retries on 409</p>
-        <span class="shrink-0 rounded-full border border-line px-2 py-0.5 text-xs">PR #412 · open</span>
+        <span class="shrink-0 rounded-full border border-line px-2 py-0.5 text-xs" data-story-step="pullRequest">PR #412 · open</span>
       </div>
       <div class="ml-auto flex min-w-0 items-center gap-x-2">
         <span class="min-w-0 truncate text-sm text-muted">
@@ -57,7 +57,7 @@ const fileEdits = [
   </div>
 
   <ol class="flex flex-col gap-1">
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="camillePrompt">
       <div class={messageHeader}>
         <span class={memberAvatar} aria-hidden="true">CD</span>
         <span class={authorName}>Camille Duciel</span>
@@ -67,7 +67,7 @@ const fileEdits = [
         The refund webhook retries forever when the provider answers 409. Can you find where we decide to retry?
       </p>
     </li>
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="agentReply">
       <div class={messageHeader}>
         <span class={agentAvatar}>
           <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.bot} /></svg>
@@ -82,8 +82,8 @@ const fileEdits = [
       </p>
     </li>
     {
-      fileEdits.map(({ path, added, removed }) => (
-        <li class={messageItem}>
+      fileEdits.map(({ path, added, removed, storyStep }) => (
+        <li class={messageItem} data-story-step={storyStep}>
           <p class={stepLine}>
             <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0">
               <Fragment set:html={iconShapes.chevronRight} />
@@ -98,7 +98,7 @@ const fileEdits = [
         </li>
       ))
     }
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="testRun">
       <p class={stepLine}>
         <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0"><Fragment set:html={iconShapes.chevronRight} /></svg>
         <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 text-green-500"><Fragment set:html={iconShapes.check} /></svg>
@@ -106,7 +106,7 @@ const fileEdits = [
         <span class="shrink-0 text-xs">Succeeded · 1.8s</span>
       </p>
     </li>
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="salimFollowing">
       <div class={messageHeader}>
         <span class={memberAvatar} aria-hidden="true">SC</span>
         <span class={authorName}>Salim Condo</span>
@@ -116,16 +116,16 @@ const fileEdits = [
         I'm following along for Acme. Ask me if this touches how they settle refunds.
       </p>
     </li>
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="agentQuestion">
       <div class:list={[stepCard, 'gap-3']}>
         <div class="flex flex-col gap-1.5">
           <p class="mb-1">Should a 409 also mark the refund as settled, or only stop the retries?</p>
-          <p>Only stop the retries. Settlement comes from the provider's own event.</p>
+          <p data-story-step="salimAnswer">Only stop the retries. Settlement comes from the provider's own event.</p>
         </div>
-        <p class="text-xs text-muted">Answered by Salim Condo</p>
+        <p class="text-xs text-muted" data-story-step="salimAnswer">Answered by Salim Condo</p>
       </div>
     </li>
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="agentDone">
       <div class={messageHeader}>
         <span class={agentAvatar}>
           <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.bot} /></svg>
@@ -135,7 +135,7 @@ const fileEdits = [
       </div>
       <p class={messageBody}>Done. The branch <code class={inlineCode}>fix/refund-409-retry</code> has one commit.</p>
     </li>
-    <li class={messageItem}>
+    <li class={messageItem} data-story-step="pullRequest">
       <div class:list={[stepCard, 'gap-2']}>
         <div class="flex flex-wrap items-center gap-2">
           <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 text-muted">
