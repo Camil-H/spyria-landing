@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, type Page, test } from '@playwright/test'
+import { docsRouteOf } from '../src/docs/routes'
 import { docsPublished } from '../src/site'
 
 test.skip(!docsPublished, 'the docs are unpublished until the digest in docs/site/ lands')
@@ -10,7 +11,7 @@ const docsIndex = readFileSync(`${productDocsDirectory}README.md`, 'utf8')
 const decisionsIndex = readFileSync(`${productDocsDirectory}decisions/README.md`, 'utf8')
 const docsRoutes = readdirSync(productDocsDirectory, { recursive: true, encoding: 'utf8' })
   .filter((path) => path.endsWith('.md'))
-  .map((path) => `/docs/${path.replace(/\.md$/, '')}`.replace(/\/?README$/, ''))
+  .map(docsRouteOf)
   .sort()
 
 function readmeLinkLabels(markdown: string, pattern: RegExp): string[] {
@@ -111,14 +112,14 @@ test('As a reader of the docs, I use pages with a diagram, code and search witho
   const violations = await cspViolationsWhile(page, async () => {
     await page.goto('/docs/architecture/overview')
     await expect(page.locator('figure.diagram svg').first()).toBeVisible()
-    await page.goto('/docs/guides/self-hosting')
+    await page.goto('/docs/install/manual-install')
     await expect(page.locator('pre.astro-code').first()).toBeVisible()
     await page.getByRole('combobox', { name: 'Search the docs' }).fill('budgets')
     await expect(
       page.locator('pagefind-searchbox').getByRole('option', { name: /Budgets are a hard stop at the relay/ }),
     ).toBeVisible()
   })
-  const response = await page.request.get('/docs/guides/self-hosting')
+  const response = await page.request.get('/docs/install/manual-install')
   expect(response.headers()['content-security-policy']).toContain("style-src 'self'")
   expect(violations).toEqual([])
 })

@@ -1,6 +1,6 @@
 # spyria-landing
 
-The site at [spyria.dev](https://spyria.dev): what [Spyria](https://github.com/Camil-H/spyria) is, its principles, how to install it, and its docs.
+The site at [spyria.dev](https://spyria.dev): what [Spyria](https://github.com/Camil-H/spyria) is, how to install it, and its docs.
 
 ```sh
 bun install

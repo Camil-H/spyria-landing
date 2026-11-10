@@ -51,9 +51,9 @@ for (const { path, html } of pages) {
 for (const [title, paths] of pathsByTitle)
   if (paths.length > 1) failures.push(`Title "${title}" is used by ${paths.join(', ')}`)
 
-const publishedPageUrls = pages
-  .filter(({ path }) => path !== notFoundPage)
-  .map(({ path }) => new URL(pagePathOf(path), siteOrigin).href)
+const isIndexed = (html: string) => !/<meta name="robots" content="noindex"/.test(html)
+const publishedPages = pages.filter(({ path, html }) => path !== notFoundPage && isIndexed(html))
+const publishedPageUrls = publishedPages.map(({ path }) => new URL(pagePathOf(path), siteOrigin).href)
 const sitemap = await Bun.file(`${distDirectory}sitemap.xml`).text()
 const sitemapEntries = [...sitemap.matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)]
 const sitemapUrls = sitemapEntries.map(([, url]) => url ?? '')
@@ -73,7 +73,7 @@ if (!llmsText.startsWith('# Spyria\n')) failures.push('llms.txt: missing, or doe
 const llmsSitePaths = [...llmsText.matchAll(/\]\(https:\/\/spyria\.dev(\/[^)\s]*)\)/g)].map(([, path]) => path ?? '')
 for (const path of llmsSitePaths)
   if (!(await builtFileExists(path))) failures.push(`llms.txt: ${siteOrigin}${path} is not in dist/`)
-for (const { path } of pages.filter(({ path }) => /^docs[./]/.test(path))) {
+for (const { path } of publishedPages.filter(({ path }) => /^docs[./]/.test(path))) {
   const route = pagePathOf(path)
   if (!llmsSitePaths.includes(route) && !llmsSitePaths.includes(`${route}.md`))
     failures.push(`llms.txt: does not link the docs page ${route}`)

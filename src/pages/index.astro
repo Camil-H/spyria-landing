@@ -3,7 +3,7 @@ import ChannelThread from '../components/ChannelThread.astro'
 import Spires from '../components/Spires.astro'
 import Transcript from '../components/Transcript.astro'
 import Page from '../layouts/Page.astro'
-import { installPublished, principlesPublished, productLicenseUrl, productRepositoryUrl } from '../site'
+import { installPublished, productLicenseUrl, productRepositoryUrl } from '../site'
 
 const runIn = 'font-medium text-ink'
 const description =
@@ -47,10 +47,9 @@ const structuredData = [
         work, answer its questions and pick up where a colleague left off.
       </p>
       {
-        (installPublished || principlesPublished) && (
+        installPublished && (
           <p class="title mt-8 flex flex-wrap justify-center gap-x-8 gap-y-3">
-            {installPublished && <a href="/install" class="highlight-link">Install on your server</a>}
-            {principlesPublished && <a href="/principles" class="highlight-link">Read the principles</a>}
+            <a href="/docs/install" class="highlight-link">Install on your server</a>
           </p>
         )
       }
@@ -150,13 +149,6 @@ const structuredData = [
         gateway you host.
       </li>
     </ul>
-    {
-      principlesPublished && (
-        <p class="title mt-6">
-          <a href="/principles" class="highlight-link">All the principles, and why</a>
-        </p>
-      )
-    }
   </section>
 
   <section aria-labelledby="self-hosted-heading" class="mt-24 max-w-2xl">
@@ -169,7 +161,7 @@ const structuredData = [
       </p>
       <p>
         You need a machine with Docker, an HTTPS address and an identity provider.
-        {installPublished && <a href="/install" class="highlight-link">Read the install guide</a>}
+        {installPublished && <a href="/docs/install" class="highlight-link">Read the install guide</a>}
       </p>
     </div>
     <p class="caption mt-8 text-muted">

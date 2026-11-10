@@ -2,6 +2,7 @@ import { relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { HastPluginDefinition, MdastPluginEntry, PluginFactoryContext } from 'satteri'
 import type { ShikiTransformer } from 'shiki'
+import { docsPublished } from '../site'
 import { renderDiagram } from './diagrams'
 import { rewriteDocsHref } from './links'
 import { productDocsDirectory } from './product'
@@ -12,7 +13,7 @@ export function docsLinksPlugin(productRef: string): MdastPluginEntry {
   return ({ fileURL }: PluginFactoryContext) => {
     const fromDocsPath = fileURL && relative(productDocsDirectory, fileURLToPath(fileURL))
     if (!fromDocsPath || fromDocsPath.startsWith('..')) return null
-    const rewrite = (url: string) => rewriteDocsHref(url, { fromDocsPath, productRef })
+    const rewrite = (url: string) => rewriteDocsHref(url, { fromDocsPath, productRef, docsPublished })
     return {
       name: 'docs-links',
       link(node, ctx) {

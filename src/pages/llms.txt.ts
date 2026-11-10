@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 import { docsRouteOf } from '../docs/routes'
 import { loadDocsSidebar } from '../docs/sidebar-data'
-import { docsPublished, productRepositoryUrl } from '../site'
+import { docsPublished, installPublished, productRepositoryUrl } from '../site'
 
 const summary =
   'Spyria is a self-hosted workspace where a team and its AI agents work in the same chats and channels, for engineering teams ' +
@@ -26,8 +26,9 @@ const productDocsOnGitHub = [
 async function siteDocsSections(siteOrigin: string): Promise<string[]> {
   const sections = await loadDocsSidebar()
   const linkTo = (label: string, docsPath: string) => `- [${label}](${siteOrigin}${docsRouteOf(docsPath)}.md)`
+  const docsIndexSection = docsPublished ? [`## Docs\n\n${linkTo('Documentation', 'README.md')}`] : []
   return [
-    `## Docs\n\n${linkTo('Documentation', 'README.md')}`,
+    ...docsIndexSection,
     ...sections.map(
       ({ title, links }) => `## ${title}\n\n${links.map(({ label, docsPath }) => linkTo(label, docsPath)).join('\n')}`,
     ),
@@ -43,12 +44,14 @@ function productDocsSection(): string {
 
 export const GET: APIRoute = async ({ site }) => {
   const siteOrigin = site?.origin ?? ''
-  const docsSections = docsPublished ? await siteDocsSections(siteOrigin) : [productDocsSection()]
+  const productDocsSections = docsPublished ? [] : [productDocsSection()]
+  const siteSections = docsPublished || installPublished ? await siteDocsSections(siteOrigin) : []
   const llmsText = [
     '# Spyria',
     `> ${summary}`,
     `## Site\n\n- [Home](${siteOrigin}/): what Spyria is, how people and agents work together, and what self-hosting needs`,
-    ...docsSections,
+    ...productDocsSections,
+    ...siteSections,
   ].join('\n\n')
   return new Response(`${llmsText}\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
 }

@@ -26,7 +26,7 @@ test('As a visitor on a missing page, I see the 404 page with a link to Home, an
   await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveCount(docsPublished ? 1 : 0)
 })
 
-test('While the docs are unpublished, /docs and its Markdown copies are not served and no page links to them', async ({
+test('While the docs are unpublished, /docs and its pages outside the install guides are not served and Home does not link to them', async ({
   page,
 }) => {
   test.skip(docsPublished, 'the docs are published')
@@ -34,7 +34,7 @@ test('While the docs are unpublished, /docs and its Markdown copies are not serv
   expect((await page.goto('/docs/architecture/overview'))?.status()).toBe(404)
   expect((await page.request.get('/docs/architecture/overview.md')).status()).toBe(404)
   await page.goto('/')
-  await expect(page.locator('a[href^="/docs"]')).toHaveCount(0)
+  await expect(page.locator('a[href^="/docs"]:not([href^="/docs/install"])')).toHaveCount(0)
 })
 
 for (const colorScheme of ['light', 'dark'] as const) {
