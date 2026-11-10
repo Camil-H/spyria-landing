@@ -1,13 +1,13 @@
 import { getCollection } from 'astro:content'
 import type { APIRoute } from 'astro'
 import { readDocsDates } from '../docs/product'
-import { docsRouteOf } from '../docs/routes'
+import { docsRouteOf, isDocsPageIndexed } from '../docs/routes'
 import { lastCommitDateOf } from '../search/last-modified'
-import { docsPublished, publishedPages } from '../site'
+import { publishedPages } from '../site'
 
 export const GET: APIRoute = async ({ site }) => {
-  const docsDates = docsPublished ? readDocsDates() : {}
-  const docsEntries = docsPublished ? await getCollection('docs') : []
+  const docsDates = readDocsDates()
+  const docsEntries = await getCollection('docs', ({ id }) => isDocsPageIndexed(id))
   const entries = [
     ...publishedPages.map(({ path, sourceFiles }) => ({ path, lastModified: lastCommitDateOf(sourceFiles) })),
     ...docsEntries.map(({ id }) => ({

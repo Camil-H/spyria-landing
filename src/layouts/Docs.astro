@@ -1,10 +1,10 @@
 ---
 import { editOnGitHubUrl, readDocsDates, readProductRef } from '../docs/product'
-import { docsRouteOf } from '../docs/routes'
+import { docsRouteOf, isDocsPageIndexed } from '../docs/routes'
 import { docsReadingOrder } from '../docs/sidebar'
 import { loadDocsSidebar } from '../docs/sidebar-data'
 import { summaryOf } from '../docs/summary'
-import { productRepositoryUrl } from '../site'
+import { docsPublished, productRepositoryUrl } from '../site'
 import Page from './Page.astro'
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 const { docsPath, title, markdown } = Astro.props
 const sections = await loadDocsSidebar()
-const readingOrder = docsReadingOrder(sections)
+const readingOrder = docsPublished ? docsReadingOrder(sections) : sections.flatMap(({ links }) => links)
 const position = readingOrder.findIndex((link) => link.docsPath === docsPath)
 const previous = position > 0 ? readingOrder[position - 1] : undefined
 const next = position >= 0 ? readingOrder[position + 1] : undefined
@@ -29,7 +29,7 @@ const linkClass =
   'block rounded-sm py-1 text-muted transition-colors duration-150 ease-settle hover:text-ink'
 ---
 
-<Page title={title} description={summaryOf(markdown)}>
+<Page title={title} description={summaryOf(markdown)} isIndexed={isDocsPageIndexed(docsPath)}>
   <Fragment slot="head">
     <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
     <link rel="alternate" type="text/markdown" href={`${currentRoute}.md`} />
@@ -43,10 +43,16 @@ const linkClass =
       <details class="docs-nav caption">
         <summary class="title cursor-pointer rounded-sm py-2 lg:hidden">Docs pages</summary>
         <nav aria-label="Docs" class="pb-4">
-          <a href="/docs" class={linkClass} aria-current={currentRoute === '/docs' ? 'page' : undefined}>Documentation</a>
+          {
+            docsPublished && (
+              <a href="/docs" class={linkClass} aria-current={currentRoute === '/docs' ? 'page' : undefined}>
+                Documentation
+              </a>
+            )
+          }
           {
             sections.map((section) => (
-              <div class="mt-6">
+              <div class="mt-6 first:mt-0">
                 <p class="title text-ink">{section.title}</p>
                 <ul class="mt-2 border-l border-line pl-3">
                   {section.links.map((link) => {

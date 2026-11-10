@@ -98,5 +98,8 @@
   --color-code-string: light-dark(var(--color-green-950), var(--color-green-400));
   --color-code-constant: light-dark(var(--color-aqua-900), var(--color-aqua-500));
   --color-code-function: light-dark(var(--color-primary-900), var(--color-primary-400));
-  --color-code-comment: var(--color-muted);
+  --color-code-comment: light-dark(
+    color-mix(in oklab, var(--color-light-neutral-800) 85%, var(--color-light-neutral-985)),
+    var(--color-grey-200)
+  );
 }

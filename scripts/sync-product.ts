@@ -39,7 +39,7 @@ async function isSyncedTo(ref: string): Promise<boolean> {
 async function checkOutProduct(ref: string) {
   await git(['init', '--quiet', productDirectory], { cwd: rootDirectory })
   await git(['remote', 'add', 'origin', `${productRepositoryUrl}.git`])
-  await git(['sparse-checkout', 'set', '--no-cone', '/docs/', '/install.sh'])
+  await git(['sparse-checkout', 'set', '--no-cone', '/docs/', '/deploy/install.sh'])
   try {
     await git(['fetch', '--quiet', '--filter=blob:none', '--no-tags', 'origin', ref])
     await git(['checkout', '--quiet', 'FETCH_HEAD'])
