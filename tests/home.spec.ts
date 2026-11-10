@@ -104,19 +104,23 @@ test('As a visitor who prefers reduced motion, the hero story shows its final st
   await expect(page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })).toHaveCSS('opacity', '1')
 })
 
-test('As a visitor, the hero story plays once and ends with everything fully visible', async ({ page }) => {
+test('As a visitor, the hero story shows everything, then starts over', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
   const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
   await expect(exampleChat).toHaveCSS('opacity', '1', { timeout: 10_000 })
   await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
-  const pendingStoryAnimations = await page.evaluate(
-    () =>
-      document
-        .getAnimations()
-        .filter((animation) => animation.effect instanceof KeyframeEffect && animation.playState !== 'finished').length,
+  const storyIterations = await page.evaluate(() =>
+    document
+      .getAnimations()
+      .filter(
+        (animation) =>
+          animation.effect instanceof KeyframeEffect && animation.effect.target?.closest('[data-hero-story]'),
+      )
+      .map((animation) => animation.effect?.getTiming().iterations),
   )
-  expect(pendingStoryAnimations).toBe(0)
+  expect(storyIterations.length).toBeGreaterThan(0)
+  expect(storyIterations.every((iterations) => iterations === Number.POSITIVE_INFINITY)).toBe(true)
 })
 
 test('As a visitor who prefers reduced motion, I see the spires as a still image and nothing on the page moves', async ({

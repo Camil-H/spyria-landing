@@ -393,47 +393,103 @@
   mask-composite: intersect;
 }
 
-@keyframes story-appear {
-  from {
+@keyframes story-reply {
+  0%,
+  6.5% {
+    opacity: 0;
+  }
+  11%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes story-actions {
+  0%,
+  15% {
+    opacity: 0;
+  }
+  17.5%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
     opacity: 0;
   }
 }
 
 @keyframes story-press {
-  from {
+  0%,
+  20.5% {
     background-color: transparent;
     color: var(--color-muted);
   }
-  40% {
+  22.5% {
     transform: scale(0.85);
     background-color: var(--color-selected);
   }
 }
 
-.story-step {
-  animation: story-appear 500ms var(--ease-settle) both;
+@keyframes story-runtime-link {
+  0%,
+  26.5% {
+    opacity: 0;
+  }
+  31%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes story-dev-chat {
+  0%,
+  33% {
+    opacity: 0;
+  }
+  40%,
+  88% {
+    opacity: 1;
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.story-step,
+.story-press {
+  animation-duration: 12s;
+  animation-timing-function: var(--ease-settle);
+  animation-iteration-count: infinite;
 }
 
 .story-reply {
-  animation-delay: 800ms;
+  animation-name: story-reply;
 }
 
 .story-actions {
-  animation-delay: 1800ms;
-  animation-duration: 300ms;
+  animation-name: story-actions;
 }
 
 .story-press {
-  animation: story-press 500ms var(--ease-settle) 2500ms both;
+  animation-name: story-press;
 }
 
 .story-runtime-link {
-  animation-delay: 3200ms;
+  animation-name: story-runtime-link;
 }
 
 .story-dev-chat {
-  animation-delay: 4000ms;
-  animation-duration: 800ms;
+  animation-name: story-dev-chat;
 }
 
 @media (prefers-reduced-motion: reduce) {

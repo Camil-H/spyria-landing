@@ -13,7 +13,7 @@ Stack: Astro (static output), Tailwind v4, Bun for scripts and the lockfile, Clo
 - Plain-language copy in the reader's terms; no internal names; no superlatives ("revolutionary", "supercharge", "seamless"). Every claim is backed by a decision record or a guide in the product docs.
 - No gradient heroes, purple glows, bento grids, logo walls, icon-card triplets, stock illustration.
 - **Motion budget:**
-  - At most one moving element in any viewport, with one exception: the Home hero's story sequence plays once on load alongside the spires, in CSS only, within 6 s; it ends with every word visible and never moves text once shown, and `prefers-reduced-motion` shows its final state at once.
+  - At most one moving element in any viewport, with one exception: the Home hero's story sequence loops alongside the spires, in CSS only, every 12 s: it builds up in under 5 s, holds every word visible for about 6 s, then fades out and starts over; it never moves text, and `prefers-reduced-motion` shows its final state, still.
   - The spires live in the Home hero stage, full width, behind the hero's example cards only (card surface at least 90% opaque); never directly behind page text.
   - They pause when off screen (IntersectionObserver) and when the tab is hidden; `prefers-reduced-motion` shows one still frame.
   - Outside the hero story, no text animates in; no scroll-jacking, no parallax; every word is in the HTML at first paint. Hover and focus transitions take 150 ms at most.
