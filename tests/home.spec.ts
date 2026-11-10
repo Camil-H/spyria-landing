@@ -5,7 +5,7 @@ const homeSections = [
   { heading: 'Working with agents is still a solo act', text: 'someone pastes a transcript into Slack' },
   {
     heading: 'One workspace for people and agents',
-    text: 'Projects, channels, threads and agent chats in one sidebar',
+    text: 'Each agent chat gets its own runtime container',
   },
   {
     heading: 'A person behind every agent',
@@ -17,6 +17,7 @@ const homeSections = [
   },
 ]
 const heroSpires = 'svg[data-spires-animated="hero-spires"]'
+const everyoneItems = ['Research with sources.', "Your team's tools.", 'Files and charts in the chat.']
 
 function countAnimationFrames(page: Page) {
   return page.addInitScript(() => {
@@ -52,6 +53,70 @@ test.describe('with JavaScript disabled', () => {
     await expect(page.locator(`${heroSpires} path`).first()).toBeAttached()
     await expect(page.locator(`${heroSpires} animate`)).toHaveCount(0)
   })
+
+  test('As a visitor with JavaScript disabled, I read the channel thread in the hero and see that an agent chat was started from it', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const channelThread = page.getByRole('figure', { name: 'Example: a channel thread in Spyria' })
+    await expect(channelThread.getByText('payments-support', { exact: true })).toBeVisible()
+    await expect(channelThread.getByText('Salim Condo', { exact: true })).toBeVisible()
+    await expect(channelThread.getByText('Acme says the provider keeps calling our refund webhook')).toBeVisible()
+    const threadReplies = channelThread.getByRole('list', { name: 'Thread replies' })
+    await expect(threadReplies.getByText('Camille Duciel', { exact: true })).toBeVisible()
+    await expect(threadReplies.getByText('On it. Starting an agent from this thread.')).toBeVisible()
+    await expect(channelThread.getByText('Start runtime from this message')).toBeVisible()
+    await expect(channelThread.getByText('Runtime: Refund retries on 409')).toBeVisible()
+  })
+})
+
+test('As a visitor, I read the dev chat and see it was started from #payments-support', async ({ page }) => {
+  await page.goto('/')
+  const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
+  await expect(exampleChat.getByText('Started from #payments-support')).toBeVisible()
+  await expect(exampleChat.getByText("I'm following along for Acme.")).toBeVisible()
+})
+
+test('As a non-engineer, I read "Not only for engineers" and its three items', async ({ page }) => {
+  await page.goto('/')
+  const section = page.getByRole('region', { name: 'Not only for engineers' })
+  await expect(section.getByRole('heading', { level: 2 })).toHaveText('Not only for engineers')
+  await expect(section.getByText("An AI chat doesn't need a repository.")).toBeVisible()
+  for (const item of everyoneItems) await expect(section.getByText(item, { exact: true })).toBeVisible()
+})
+
+test('As a visitor who prefers reduced motion, the hero story shows its final state at once', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const runningStoryAnimations = await page.evaluate(
+    () =>
+      document
+        .getAnimations()
+        .filter(
+          (animation) =>
+            animation.effect instanceof KeyframeEffect &&
+            animation.effect.target?.closest('[data-hero-story]') &&
+            animation.playState !== 'finished',
+        ).length,
+  )
+  expect(runningStoryAnimations).toBe(0)
+  await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
+  await expect(page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })).toHaveCSS('opacity', '1')
+})
+
+test('As a visitor, the hero story plays once and ends with everything fully visible', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+  const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
+  await expect(exampleChat).toHaveCSS('opacity', '1', { timeout: 10_000 })
+  await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
+  const pendingStoryAnimations = await page.evaluate(
+    () =>
+      document
+        .getAnimations()
+        .filter((animation) => animation.effect instanceof KeyframeEffect && animation.playState !== 'finished').length,
+  )
+  expect(pendingStoryAnimations).toBe(0)
 })
 
 test('As a visitor who prefers reduced motion, I see the spires as a still image and nothing on the page moves', async ({

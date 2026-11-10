@@ -1,45 +1,25 @@
 ---
+import {
+  appWindow,
+  authorName,
+  chatTitle,
+  composerBox,
+  iconAttributes,
+  iconShapes,
+  memberAvatar,
+  messageBody,
+  messageHeader,
+  messageItem,
+  messageTime,
+} from './product-look'
+
 interface Props {
   class?: string
 }
 
 const { class: className } = Astro.props
 
-const iconShapes = {
-  bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
-  chevronRight: '<path d="m9 18 6-6-6-6"/>',
-  chevronDown: '<path d="m6 9 6 6 6-6"/>',
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  gitPullRequest:
-    '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" x2="6" y1="9" y2="21"/>',
-  folder:
-    '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
-  gitBranch: '<path d="M15 6a9 9 0 0 0-9 9V3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>',
-  paperclip:
-    '<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>',
-  arrowUp: '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
-  textSearch:
-    '<path d="M21 5H3"/><path d="M10 12H3"/><path d="M10 19H3"/><circle cx="17" cy="15" r="3"/><path d="m21 19-1.9-1.9"/>',
-}
-
-const iconAttributes = {
-  xmlns: 'http://www.w3.org/2000/svg',
-  viewBox: '0 0 24 24',
-  fill: 'none',
-  stroke: 'currentColor',
-  'stroke-width': '2',
-  'stroke-linecap': 'round',
-  'stroke-linejoin': 'round',
-} as const
-
-const messageItem = 'rounded-md px-3 py-2'
-const messageHeader = 'flex items-center gap-2'
-const authorName = 'text-sm font-medium'
-const messageTime = 'text-xs text-muted'
-const messageBody = 'text-sm text-pretty'
 const inlineCode = 'rounded-sm bg-sunken px-1 font-mono text-xs wrap-anywhere'
-const memberAvatar =
-  'flex size-6 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-medium text-muted'
 const agentAvatar = 'flex size-6 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink'
 const stepLine = 'flex max-w-full items-center gap-1.5 text-sm text-muted'
 const stepCard = 'flex flex-col rounded-lg border border-line bg-raised p-3 text-sm'
@@ -55,25 +35,25 @@ const fileEdits = [
 
 <figure
   aria-label="Example: a dev chat in Spyria"
-  class:list={[
-    'flex min-w-0 flex-col gap-4 rounded-2xl border border-card-edge bg-raised/90 p-4 text-left text-ink shadow-xl',
-    className,
-  ]}
+  class:list={[appWindow, className]}
 >
-  <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-    <div class="flex min-w-0 items-center gap-2">
-      <svg aria-hidden="true" {...iconAttributes} class="size-5 shrink-0 text-muted"><Fragment set:html={iconShapes.bot} /></svg>
-      <p class="truncate text-xl font-medium sm:text-2xl">Refund retries on 409</p>
-      <span class="shrink-0 rounded-full border border-line px-2 py-0.5 text-xs">PR #412 · open</span>
+  <div>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div class="flex min-w-0 items-center gap-2">
+        <svg aria-hidden="true" {...iconAttributes} class="size-5 shrink-0 text-muted"><Fragment set:html={iconShapes.bot} /></svg>
+        <p class={chatTitle}>Refund retries on 409</p>
+        <span class="shrink-0 rounded-full border border-line px-2 py-0.5 text-xs">PR #412 · open</span>
+      </div>
+      <div class="ml-auto flex min-w-0 items-center gap-x-2">
+        <span class="min-w-0 truncate text-sm text-muted">
+          Agent acts as <strong class="font-medium text-ink">Camille Duciel</strong>
+        </span>
+        <span class="rounded-md p-1.5 text-muted">
+          <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.textSearch} /></svg>
+        </span>
+      </div>
     </div>
-    <div class="ml-auto flex min-w-0 items-center gap-x-2">
-      <span class="min-w-0 truncate text-sm text-muted">
-        Agent acts as <strong class="font-medium text-ink">Camille Duciel</strong>
-      </span>
-      <span class="rounded-md p-1.5 text-muted">
-        <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.textSearch} /></svg>
-      </span>
-    </div>
+    <p class="mt-1 text-sm text-muted underline">Started from #payments-support</p>
   </div>
 
   <ol class="flex flex-col gap-1">
@@ -133,7 +113,7 @@ const fileEdits = [
         <time datetime="10:45" class={messageTime}>10:45</time>
       </div>
       <p class={messageBody}>
-        I wrote the provider integration, so I'm following along. Ask me if this touches settlement.
+        I'm following along for Acme. Ask me if this touches how they settle refunds.
       </p>
     </li>
     <li class={messageItem}>
@@ -181,7 +161,7 @@ const fileEdits = [
         <span class="truncate">fix/refund-409-retry</span>
       </span>
     </div>
-    <div class="rounded-xl border border-line bg-raised">
+    <div class={composerBox}>
       <div class="flex items-end gap-1 p-2">
         <span class="min-h-8 min-w-0 flex-1"></span>
         <span class="rounded-full p-2 text-muted">
