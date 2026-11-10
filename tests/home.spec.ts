@@ -103,9 +103,11 @@ test('As a visitor who prefers reduced motion, the hero story shows its final st
   await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
   await expect(page.locator('[data-story-step="devChat"]')).toHaveCSS('opacity', '1')
   await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-story-replaced="questionOptions"]')).toHaveCSS('opacity', '0')
+  await expect(page.getByText('Only stop the retries', { exact: true })).toHaveCSS('opacity', '1')
 })
 
-const storyStepOpacityAt = async (page: Page, seconds: number, step: string) => {
+const storyOpacityAt = async (page: Page, seconds: number, selector: string) => {
   await page.evaluate((milliseconds) => {
     for (const animation of document.getAnimations()) {
       if (animation.effect instanceof KeyframeEffect && animation.effect.target?.closest('[data-hero-story]')) {
@@ -115,24 +117,29 @@ const storyStepOpacityAt = async (page: Page, seconds: number, step: string) => 
     }
   }, seconds * 1000)
   return page
-    .locator(`[data-story-step="${step}"]`)
+    .locator(selector)
     .first()
     .evaluate((element) => getComputedStyle(element).opacity)
 }
 
-test('As a visitor, the hero story shows its messages one by one, holds them all, then starts over', async ({
+test('As a visitor, the hero story shows its messages one by one, Salim picks an answer to the question, then the story starts over', async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
   await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1', { timeout: 20_000 })
-  expect(await storyStepOpacityAt(page, 6.9, 'agentReply')).toBe('1')
-  expect(await storyStepOpacityAt(page, 6.9, 'salimFollowing')).toBe('0')
-  expect(await storyStepOpacityAt(page, 9.6, 'salimFollowing')).toBe('1')
-  expect(await storyStepOpacityAt(page, 9.6, 'salimAnswer')).toBe('0')
-  expect(await storyStepOpacityAt(page, 16, 'salimMessage')).toBe('1')
-  expect(await storyStepOpacityAt(page, 16, 'pullRequest')).toBe('1')
-  expect(await storyStepOpacityAt(page, 21.9, 'pullRequest')).toBe('0')
+  expect(await storyOpacityAt(page, 6.9, '[data-story-step="agentReply"]')).toBe('1')
+  expect(await storyOpacityAt(page, 6.9, '[data-story-step="salimFollowing"]')).toBe('0')
+  expect(await storyOpacityAt(page, 9.6, '[data-story-step="salimFollowing"]')).toBe('1')
+  expect(await storyOpacityAt(page, 9.6, '[data-story-step="salimAnswer"]')).toBe('0')
+  expect(await storyOpacityAt(page, 11.55, '[data-story-step="salimChoice"]')).toBe('1')
+  expect(await storyOpacityAt(page, 11.55, '[data-story-replaced="questionOptions"]')).toBe('1')
+  expect(await storyOpacityAt(page, 11.55, '[data-story-step="salimAnswer"]')).toBe('0')
+  expect(await storyOpacityAt(page, 12.8, '[data-story-replaced="questionOptions"]')).toBe('0')
+  expect(await storyOpacityAt(page, 12.8, '[data-story-step="salimAnswer"]')).toBe('1')
+  expect(await storyOpacityAt(page, 16, '[data-story-step="salimMessage"]')).toBe('1')
+  expect(await storyOpacityAt(page, 16, '[data-story-step="pullRequest"]')).toBe('1')
+  expect(await storyOpacityAt(page, 21.9, '[data-story-step="pullRequest"]')).toBe('0')
   const storyIterations = await page.evaluate(() =>
     document
       .getAnimations()

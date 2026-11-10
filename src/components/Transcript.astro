@@ -27,6 +27,13 @@ const workspaceChip =
   'flex min-w-0 items-center gap-1.5 rounded-md border border-line bg-raised px-2 py-1 text-xs text-muted'
 const barChip = 'flex min-w-0 items-center gap-1 rounded-md px-2 py-1 text-xs text-muted'
 
+const submitButton = 'rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-ink'
+const skipButton = 'rounded-full border border-line px-4 py-1.5 text-sm text-ink'
+const answerOptions = [
+  { label: 'Only stop the retries', description: "Settlement stays with the provider's event", isSalimChoice: true },
+  { label: 'Also mark it as settled', description: 'A 409 closes the refund', isSalimChoice: false },
+]
+
 const fileEdits = [
   { path: 'webhooks/refunds.ts', added: 6, removed: 4, storyStep: 'editRefunds' },
   { path: 'webhooks/refunds.test.ts', added: 25, removed: 0, storyStep: 'editTest' },
@@ -118,11 +125,38 @@ const fileEdits = [
     </li>
     <li class={messageItem} data-story-step="agentQuestion">
       <div class:list={[stepCard, 'gap-3']}>
-        <div class="flex flex-col gap-1.5">
-          <p class="mb-1">Should a 409 also mark the refund as settled, or only stop the retries?</p>
-          <p data-story-step="salimAnswer">Only stop the retries. Settlement comes from the provider's own event.</p>
+        <p>Should a 409 also mark the refund as settled, or only stop the retries?</p>
+        <div class="grid">
+          <div class="col-start-1 row-start-1 flex flex-col gap-3" aria-hidden="true" data-story-replaced="questionOptions">
+            <div class="flex flex-col gap-1.5">
+              {
+                answerOptions.map(({ label, description, isSalimChoice }) => (
+                  <p class="flex items-baseline gap-2">
+                    <span class="relative top-0.5 size-3.5 shrink-0 rounded-full border border-muted">
+                      {isSalimChoice && (
+                        <span
+                          class="absolute -inset-px flex items-center justify-center rounded-full border-4 border-accent bg-raised"
+                          data-story-step="salimChoice"
+                        />
+                      )}
+                    </span>
+                    <span>
+                      {label} <span class="text-xs text-muted">{description}</span>
+                    </span>
+                  </p>
+                ))
+              }
+            </div>
+            <div class="flex gap-2">
+              <span class={submitButton} data-story-press="submitAnswer">Submit</span>
+              <span class={skipButton}>Skip</span>
+            </div>
+          </div>
+          <div class="col-start-1 row-start-1 flex flex-col justify-between gap-1.5" data-story-step="salimAnswer">
+            <p>Only stop the retries</p>
+            <p class="text-xs text-muted">Answered by Salim Condo</p>
+          </div>
         </div>
-        <p class="text-xs text-muted" data-story-step="salimAnswer">Answered by Salim Condo</p>
       </div>
     </li>
     <li class={messageItem} data-story-step="agentDone">
