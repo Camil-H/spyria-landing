@@ -8,43 +8,43 @@ const { isSpacer = false } = Astro.props
 const submitButton = 'rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-ink'
 const skipButton = 'rounded-full border border-line px-4 py-1.5 text-sm text-ink'
 const answerOptions = [
-  { label: 'Only stop the retries', description: "Settlement stays with the provider's event", isSalimChoice: true },
-  { label: 'Also mark it as settled', description: 'A 409 closes the refund', isSalimChoice: false },
+  { label: 'Only stop the retries', isSalimChoice: true },
+  { label: 'Also mark it as settled', isSalimChoice: false },
 ]
 const optionsSchedule = isSpacer ? 'data-story-shown-from' : 'data-story-shown-until'
 const answerSchedule = isSpacer ? 'data-story-shown-until' : 'data-story-shown-from'
 ---
 
-<div {...{ [optionsSchedule]: 'salimAnswer' }} aria-hidden="true">
-  <div class="flex flex-col gap-3 pl-px">
-    <div class="flex flex-col gap-1.5">
-      {
-        answerOptions.map(({ label, description, isSalimChoice }) => (
-          <p class="flex items-baseline gap-2">
-            <span class="relative top-0.5 size-3.5 shrink-0 rounded-full border border-muted">
-              {isSalimChoice && !isSpacer && (
-                <span
-                  class="absolute -inset-px rounded-full border-4 border-accent bg-raised"
-                  data-story-step="salimChoice"
-                />
-              )}
-            </span>
-            <span>
-              {label} <span class="text-xs text-muted">{description}</span>
-            </span>
-          </p>
-        ))
-      }
-    </div>
-    <div class="flex gap-2">
-      <span class={submitButton} data-story-press={isSpacer ? undefined : 'submitAnswer'}>Submit</span>
-      <span class={skipButton}>Skip</span>
+<div>
+  <div {...{ [optionsSchedule]: 'salimAnswer' }} aria-hidden="true">
+    <div class="flex flex-col gap-3 pl-px">
+      <div class="flex flex-col gap-1.5">
+        {
+          answerOptions.map(({ label, isSalimChoice }) => (
+            <p class="flex items-baseline gap-2">
+              <span class="relative top-0.5 size-3.5 shrink-0 rounded-full border border-muted">
+                {isSalimChoice && !isSpacer && (
+                  <span
+                    class="absolute -inset-px rounded-full border-4 border-accent bg-raised"
+                    data-story-step="salimChoice"
+                  />
+                )}
+              </span>
+              <span>{label}</span>
+            </p>
+          ))
+        }
+      </div>
+      <div class="flex gap-2">
+        <span class={submitButton} data-story-press={isSpacer ? undefined : 'submitAnswer'}>Submit</span>
+        <span class={skipButton}>Skip</span>
+      </div>
     </div>
   </div>
-</div>
-<div {...{ [answerSchedule]: 'salimAnswer' }} aria-hidden={isSpacer ? 'true' : undefined}>
-  <div class="flex flex-col gap-1.5" data-story-step={isSpacer ? undefined : 'salimAnswer'}>
-    <p>Only stop the retries</p>
-    <p class="text-xs text-muted">Answered by Salim Condo</p>
+  <div {...{ [answerSchedule]: 'salimAnswer' }} aria-hidden={isSpacer ? 'true' : undefined}>
+    <div class="flex flex-col gap-1.5" data-story-step={isSpacer ? undefined : 'salimAnswer'}>
+      <p>Only stop the retries</p>
+      <p class="text-xs text-muted">Answered by Salim Condo</p>
+    </div>
   </div>
 </div>
