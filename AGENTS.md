@@ -13,10 +13,10 @@ Stack: Astro (static output), Tailwind v4, Bun for scripts and the lockfile, Clo
 - Plain-language copy in the reader's terms; no internal names; no superlatives ("revolutionary", "supercharge", "seamless"). Every claim is backed by a decision record or a guide in the product docs.
 - No gradient heroes, purple glows, bento grids, logo walls, icon-card triplets, stock illustration.
 - **Motion budget:**
-  - At most one moving element in any viewport.
-  - The spires live in the Home hero stage, full width, behind the demo chat card only (card surface at least 90% opaque); never directly behind page text.
+  - At most one moving element in any viewport, with one exception: the Home hero's story sequence plays once on load alongside the spires, in CSS only, within 6 s; it ends with every word visible and never moves text once shown, and `prefers-reduced-motion` shows its final state at once.
+  - The spires live in the Home hero stage, full width, behind the hero's example cards only (card surface at least 90% opaque); never directly behind page text.
   - They pause when off screen (IntersectionObserver) and when the tab is hidden; `prefers-reduced-motion` shows one still frame.
-  - No text animates in, no scroll-jacking, no parallax; every word is in the HTML at first paint. Hover and focus transitions take 150 ms at most.
+  - Outside the hero story, no text animates in; no scroll-jacking, no parallax; every word is in the HTML at first paint. Hover and focus transitions take 150 ms at most.
 - **JavaScript budget:** the spires island 15 KB gzip at most; the theme toggle is the one inline script; Pagefind only on docs pages; nothing else ships JavaScript.
 - Every page reads completely with JavaScript off and at 360 px wide without horizontal scroll.
 - **No comments: code explains itself.** Explicit names, small functions. A comment is acceptable only for what the code cannot say (a non-obvious external constraint, such as a vendor bug with its issue link); never to narrate what the code does.

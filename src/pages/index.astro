@@ -1,4 +1,5 @@
 ---
+import ChannelThread from '../components/ChannelThread.astro'
 import Spires from '../components/Spires.astro'
 import Transcript from '../components/Transcript.astro'
 import Page from '../layouts/Page.astro'
@@ -53,13 +54,16 @@ const structuredData = [
         )
       }
     </div>
-    <div class="relative isolate mt-12 py-16 sm:mt-16 sm:py-24">
+    <div data-hero-story class="relative isolate mt-12 py-16 sm:mt-16 sm:py-24">
       <Spires
         idPrefix="hero-spires"
         animated
         class="spires-stage absolute inset-y-0 left-1/2 -z-10 h-full w-screen -translate-x-1/2"
       />
-      <Transcript class="mx-auto w-full max-w-2xl" />
+      <div class="mx-auto grid max-w-2xl gap-6 lg:max-w-none lg:grid-cols-5 lg:items-start">
+        <ChannelThread class="lg:col-span-2" />
+        <Transcript class="story-step story-dev-chat lg:col-span-3" />
+      </div>
     </div>
   </section>
 
@@ -82,10 +86,6 @@ const structuredData = [
     <h2 id="workspace-heading" class="heading-2">One workspace for people and agents</h2>
     <div class="body mt-8 space-y-6 text-muted">
       <p>
-        <strong class={runIn}>Chats and channels.</strong> Projects, channels, threads and agent chats in one sidebar. Start
-        an agent from a channel thread, invite a colleague into its chat, or fork it to try another approach.
-      </p>
-      <p>
         <strong class={runIn}>Agents in sandboxes.</strong> Each agent chat gets its own runtime container on a machine you
         run. Pi runs there on the prompting member's API key. Claude Code and Codex run on a member's own laptop with their
         own subscription, and the rest of the team can read along.
@@ -94,6 +94,28 @@ const structuredData = [
         <strong class={runIn}>Pull requests from a chat.</strong> Attach a chat to a GitHub repository. The agent works on a
         branch in its runtime, the side panel shows files, changes and commits, and the chat owner opens the pull request
         under their own GitHub account.
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="everyone-heading" class="mt-24 max-w-2xl">
+    <h2 id="everyone-heading" class="heading-2">Not only for engineers</h2>
+    <p class="body mt-8">
+      An AI chat doesn't need a repository. Anyone in the workspace can start one, from scratch or from a channel thread.
+    </p>
+    <div class="body mt-8 space-y-6 text-muted">
+      <p>
+        <strong class={runIn}>Research with sources.</strong> On a Spyria runtime, the agent searches the web on the
+        prompter's own key, gets the address of every source, and can open a page for everyone in the chat.
+      </p>
+      <p>
+        <strong class={runIn}>Your team's tools.</strong> An admin connects the tools your workspace shares, such as a CRM,
+        a wiki or a ticket tracker, once. The agent uses them with the chat owner's access, and anything a guest's prompt
+        would change waits for the owner's approval.
+      </p>
+      <p>
+        <strong class={runIn}>Files and charts in the chat.</strong> The agent draws a chart or takes a screenshot in its
+        runtime and shows it right in the conversation. A report it writes as a web page opens in the chat's Browser tab.
       </p>
     </div>
   </section>

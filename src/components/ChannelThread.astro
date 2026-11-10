@@ -1,0 +1,106 @@
+---
+import {
+  appWindow,
+  authorName,
+  chatTitle,
+  composerBox,
+  iconAttributes,
+  iconShapes,
+  memberAvatar,
+  messageBody,
+  messageHeader,
+  messageItem,
+  messageTime,
+} from './product-look'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+const actionButton = 'rounded-md p-1 text-muted'
+const actionsBeforeRuntime = [iconShapes.messageSquareReply, iconShapes.reply]
+const actionsAfterRuntime = [iconShapes.clipboardCopy, iconShapes.link]
+---
+
+<figure aria-label="Example: a channel thread in Spyria" class:list={[appWindow, className]}>
+  <div class="flex items-center gap-x-3">
+    <div class="flex min-w-0 items-center gap-2">
+      <svg aria-hidden="true" {...iconAttributes} class="size-5 shrink-0 text-muted"><Fragment set:html={iconShapes.hash} /></svg>
+      <p class={chatTitle}>payments-support</p>
+    </div>
+    <span class="ml-auto rounded-md p-1.5 text-muted">
+      <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.textSearch} /></svg>
+    </span>
+  </div>
+
+  <ol class="flex flex-col gap-1 pt-12">
+    <li class:list={[messageItem, 'relative']}>
+      <div class="story-step story-actions absolute -top-5 right-2">
+        <p class="absolute right-0 bottom-full mb-2 rounded-md border border-line bg-raised px-2 py-1 text-xs whitespace-nowrap text-ink shadow-lg">
+          Start runtime from this message
+        </p>
+        <div class="flex gap-0.5 rounded-md border border-line bg-raised p-0.5 shadow-sm">
+          {
+            actionsBeforeRuntime.map((shape) => (
+              <span class={actionButton}>
+                <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={shape} /></svg>
+              </span>
+            ))
+          }
+          <span class="story-press rounded-md bg-hover p-1 text-ink">
+            <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={iconShapes.squareTerminal} /></svg>
+          </span>
+          {
+            actionsAfterRuntime.map((shape) => (
+              <span class={actionButton}>
+                <svg aria-hidden="true" {...iconAttributes} class="size-4"><Fragment set:html={shape} /></svg>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+      <div class={messageHeader}>
+        <span class={memberAvatar} aria-hidden="true">SC</span>
+        <span class={authorName}>Salim Condo</span>
+        <time datetime="10:31" class={messageTime}>10:31</time>
+      </div>
+      <p class={messageBody}>
+        Acme says the provider keeps calling our refund webhook: more than 200 calls for one refund since yesterday. Can
+        someone take a look?
+      </p>
+      <p class="story-step story-runtime-link mt-1 text-xs text-muted underline">Runtime: Refund retries on 409</p>
+    </li>
+    <li class="story-step story-reply px-3">
+      <p class="flex items-center gap-1.5 text-sm text-muted">
+        <svg aria-hidden="true" {...iconAttributes} class="size-4 shrink-0 rotate-90">
+          <Fragment set:html={iconShapes.chevronRight} />
+        </svg>
+        1 reply
+      </p>
+      <div class="mt-1 ml-1.5 border-l-2 border-line pl-3">
+        <ol aria-label="Thread replies">
+          <li class={messageItem}>
+            <div class={messageHeader}>
+              <span class={memberAvatar} aria-hidden="true">CD</span>
+              <span class={authorName}>Camille Duciel</span>
+              <time datetime="10:38" class={messageTime}>10:38</time>
+            </div>
+            <p class={messageBody}>On it. Starting an agent from this thread.</p>
+          </li>
+        </ol>
+      </div>
+    </li>
+  </ol>
+
+  <div class:list={[composerBox, 'flex items-end gap-1 p-2']}>
+    <span class="min-h-8 min-w-0 flex-1"></span>
+    <span class="rounded-full p-2 text-muted">
+      <svg aria-hidden="true" {...iconAttributes} class="size-4.5"><Fragment set:html={iconShapes.paperclip} /></svg>
+    </span>
+    <span class="rounded-full bg-accent p-2 text-accent-ink opacity-40">
+      <svg aria-hidden="true" {...iconAttributes} class="size-4.5"><Fragment set:html={iconShapes.arrowUp} /></svg>
+    </span>
+  </div>
+</figure>

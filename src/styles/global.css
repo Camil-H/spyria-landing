@@ -392,3 +392,53 @@
     linear-gradient(to right, transparent, black 25%, black 75%, transparent);
   mask-composite: intersect;
 }
+
+@keyframes story-appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes story-press {
+  from {
+    background-color: transparent;
+    color: var(--color-muted);
+  }
+  40% {
+    transform: scale(0.85);
+    background-color: var(--color-selected);
+  }
+}
+
+.story-step {
+  animation: story-appear 500ms var(--ease-settle) both;
+}
+
+.story-reply {
+  animation-delay: 800ms;
+}
+
+.story-actions {
+  animation-delay: 1800ms;
+  animation-duration: 300ms;
+}
+
+.story-press {
+  animation: story-press 500ms var(--ease-settle) 2500ms both;
+}
+
+.story-runtime-link {
+  animation-delay: 3200ms;
+}
+
+.story-dev-chat {
+  animation-delay: 4000ms;
+  animation-duration: 800ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-step,
+  .story-press {
+    animation: none;
+  }
+}
