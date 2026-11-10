@@ -48,7 +48,7 @@ test.describe('with JavaScript disabled', () => {
     }
     const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
     await expect(exampleChat).toBeVisible()
-    await expect(exampleChat.getByText('Answered by Salim Condo')).toBeVisible()
+    await expect(exampleChat.getByText('Answered by Salim Condo').first()).toBeVisible()
     await expect(exampleChat.getByText('Salim Condo', { exact: true })).toBeVisible()
     await expect(page.locator(`${heroSpires} path`).first()).toBeAttached()
     await expect(page.locator(`${heroSpires} animate`)).toHaveCount(0)
@@ -103,12 +103,12 @@ test('As a visitor who prefers reduced motion, the hero story shows its final st
   await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
   await expect(page.locator('[data-story-step="devChat"]')).toHaveCSS('opacity', '1')
   await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1')
-  await expect(page.locator('[data-story-replaced="questionOptions"]')).toHaveCSS('opacity', '0')
-  await expect(page.getByText('Only stop the retries', { exact: true })).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-story-shown-until="salimAnswer"]').first()).toHaveCSS('height', '0px')
+  await expect(page.getByText('Only stop the retries', { exact: true }).first()).toHaveCSS('opacity', '1')
 })
 
-const storyOpacityAt = async (page: Page, seconds: number, selector: string) => {
-  await page.evaluate((milliseconds) => {
+const seekStory = (page: Page, seconds: number) =>
+  page.evaluate((milliseconds) => {
     for (const animation of document.getAnimations()) {
       if (animation.effect instanceof KeyframeEffect && animation.effect.target?.closest('[data-hero-story]')) {
         animation.pause()
@@ -116,15 +116,21 @@ const storyOpacityAt = async (page: Page, seconds: number, selector: string) => 
       }
     }
   }, seconds * 1000)
+
+const storyOpacityAt = async (page: Page, seconds: number, selector: string) => {
+  await seekStory(page, seconds)
   return page
     .locator(selector)
     .first()
     .evaluate((element) => getComputedStyle(element).opacity)
 }
 
-test('As a visitor, the hero story shows its messages one by one, Salim picks an answer to the question, then the story starts over', async ({
+const questionOptions = '[data-story-shown-until="salimAnswer"]'
+
+test("As a visitor, the hero story shows its messages one by one, Salim's answer replaces the question's options without changing the chat's height, then the story starts over", async ({
   page,
 }) => {
+  test.slow()
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
   await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1', { timeout: 20_000 })
@@ -133,10 +139,13 @@ test('As a visitor, the hero story shows its messages one by one, Salim picks an
   expect(await storyOpacityAt(page, 9.6, '[data-story-step="salimFollowing"]')).toBe('1')
   expect(await storyOpacityAt(page, 9.6, '[data-story-step="salimAnswer"]')).toBe('0')
   expect(await storyOpacityAt(page, 11.55, '[data-story-step="salimChoice"]')).toBe('1')
-  expect(await storyOpacityAt(page, 11.55, '[data-story-replaced="questionOptions"]')).toBe('1')
+  await expect(page.locator(questionOptions).first()).not.toHaveCSS('height', '0px')
   expect(await storyOpacityAt(page, 11.55, '[data-story-step="salimAnswer"]')).toBe('0')
-  expect(await storyOpacityAt(page, 12.8, '[data-story-replaced="questionOptions"]')).toBe('0')
+  const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
+  const chatHeightWithOptions = (await exampleChat.boundingBox())?.height
   expect(await storyOpacityAt(page, 12.8, '[data-story-step="salimAnswer"]')).toBe('1')
+  await expect(page.locator(questionOptions).first()).toHaveCSS('height', '0px')
+  expect((await exampleChat.boundingBox())?.height).toBe(chatHeightWithOptions)
   expect(await storyOpacityAt(page, 16, '[data-story-step="salimMessage"]')).toBe('1')
   expect(await storyOpacityAt(page, 16, '[data-story-step="pullRequest"]')).toBe('1')
   expect(await storyOpacityAt(page, 21.9, '[data-story-step="pullRequest"]')).toBe('0')

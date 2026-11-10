@@ -33,7 +33,7 @@ const stepKeyframes = (step: StoryStep, appearsAt: number) =>
 }
 [data-story-step="${step}"] { animation-name: story-${step}; }`
 
-const storyReplacedViews = { questionOptions: 'salimAnswer' } as const satisfies Record<string, StoryStep>
+const storyViewSwaps = ['salimAnswer'] as const satisfies StoryStep[]
 
 const storyPresses = {
   startRuntime: {
@@ -50,12 +50,21 @@ const storyPresses = {
   },
 }
 
-const replacedViewKeyframes = (view: string, replacedBy: StoryStep) =>
-  `@keyframes story-replaced-${view} {
-  0%, ${percentOf(storySteps[replacedBy])} { opacity: 1; }
-  ${percentOf(storySteps[replacedBy] + storyFadeSeconds)}, 100% { opacity: 0; }
+const viewSwapKeyframes = (step: StoryStep) => {
+  const shownUntil = percentOf(storySteps[step])
+  const hiddenFrom = percentOf(storySteps[step] + 0.01)
+  return `@keyframes story-shown-until-${step} {
+  0%, ${shownUntil} { height: auto; }
+  ${hiddenFrom}, 100% { height: 0; }
 }
-[data-story-replaced="${view}"] { opacity: 0; animation-name: story-replaced-${view}; }`
+@keyframes story-shown-from-${step} {
+  0%, ${shownUntil} { height: 0; }
+  ${hiddenFrom}, 100% { height: auto; }
+}
+[data-story-shown-until="${step}"] { animation-name: story-shown-until-${step}; }
+[data-story-shown-from="${step}"] { animation-name: story-shown-from-${step}; }
+[data-story-shown-until="${step}"], [data-story-shown-from="${step}"] { overflow: hidden; }`
+}
 
 const pressKeyframes = (
   press: string,
@@ -69,15 +78,16 @@ const pressKeyframes = (
 [data-story-press="${press}"] { animation-name: story-press-${press}; }`
 
 export const heroStoryStylesheet = [
-  `[data-story-step], [data-story-replaced], [data-story-press] {
+  `[data-story-step], [data-story-shown-until], [data-story-shown-from], [data-story-press] {
   animation-duration: ${storyCycleSeconds}s;
   animation-timing-function: var(--ease-settle);
   animation-iteration-count: infinite;
 }`,
   ...Object.entries(storySteps).map(([step, appearsAt]) => stepKeyframes(step as StoryStep, appearsAt)),
-  ...Object.entries(storyReplacedViews).map(([view, replacedBy]) => replacedViewKeyframes(view, replacedBy)),
+  ...storyViewSwaps.map(viewSwapKeyframes),
   ...Object.entries(storyPresses).map(([press, timing]) => pressKeyframes(press, timing)),
   `@media (prefers-reduced-motion: reduce) {
-  [data-story-step], [data-story-replaced], [data-story-press] { animation: none; }
+  [data-story-step], [data-story-shown-until], [data-story-shown-from], [data-story-press] { animation: none; }
+  [data-story-shown-until] { height: 0; }
 }`,
 ].join('\n\n')
