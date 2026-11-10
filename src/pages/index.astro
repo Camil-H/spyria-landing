@@ -36,6 +36,7 @@ const structuredData = [
 
 <Page title="Spyria: a shared workspace for teams and their agents" description={description}>
   <Fragment slot="head">
+    <link rel="stylesheet" href="/hero-story.css" />
     {structuredData.map((block) => <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />)}
   </Fragment>
   <section aria-labelledby="hero-heading" class="pt-12 sm:pt-16">
@@ -62,7 +63,7 @@ const structuredData = [
       />
       <div class="mx-auto grid max-w-2xl gap-6 lg:max-w-none lg:grid-cols-5 lg:items-start">
         <ChannelThread class="lg:col-span-2" />
-        <Transcript class="story-step story-dev-chat lg:col-span-3" />
+        <div class="lg:col-span-3" data-story-step="devChat"><Transcript /></div>
       </div>
     </div>
   </section>

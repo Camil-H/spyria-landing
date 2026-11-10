@@ -101,15 +101,38 @@ test('As a visitor who prefers reduced motion, the hero story shows its final st
   )
   expect(runningStoryAnimations).toBe(0)
   await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
-  await expect(page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-story-step="devChat"]')).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1')
 })
 
-test('As a visitor, the hero story shows everything, then starts over', async ({ page }) => {
+const storyStepOpacityAt = async (page: Page, seconds: number, step: string) => {
+  await page.evaluate((milliseconds) => {
+    for (const animation of document.getAnimations()) {
+      if (animation.effect instanceof KeyframeEffect && animation.effect.target?.closest('[data-hero-story]')) {
+        animation.pause()
+        animation.currentTime = milliseconds
+      }
+    }
+  }, seconds * 1000)
+  return page
+    .locator(`[data-story-step="${step}"]`)
+    .first()
+    .evaluate((element) => getComputedStyle(element).opacity)
+}
+
+test('As a visitor, the hero story shows its messages one by one, holds them all, then starts over', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
-  const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
-  await expect(exampleChat).toHaveCSS('opacity', '1', { timeout: 10_000 })
-  await expect(page.getByText('Runtime: Refund retries on 409')).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-story-step="pullRequest"]').last()).toHaveCSS('opacity', '1', { timeout: 20_000 })
+  expect(await storyStepOpacityAt(page, 6.9, 'agentReply')).toBe('1')
+  expect(await storyStepOpacityAt(page, 6.9, 'salimFollowing')).toBe('0')
+  expect(await storyStepOpacityAt(page, 9.6, 'salimFollowing')).toBe('1')
+  expect(await storyStepOpacityAt(page, 9.6, 'salimAnswer')).toBe('0')
+  expect(await storyStepOpacityAt(page, 16, 'salimMessage')).toBe('1')
+  expect(await storyStepOpacityAt(page, 16, 'pullRequest')).toBe('1')
+  expect(await storyStepOpacityAt(page, 21.9, 'pullRequest')).toBe('0')
   const storyIterations = await page.evaluate(() =>
     document
       .getAnimations()
