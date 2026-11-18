@@ -49,6 +49,7 @@
   --color-accent: var(--color-primary-500);
   --color-accent-hover: var(--color-primary-400);
   --color-accent-ink: var(--color-primary-985);
+  --color-link-line: color-mix(in oklab, var(--color-ink) 35%, transparent);
   --color-highlight: light-dark(
     var(--color-primary-500),
     color-mix(in oklab, var(--color-primary-500) 55%, var(--color-grey-985))
