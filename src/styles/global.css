@@ -87,33 +87,13 @@
   justify-content: center;
   gap: 0.5rem;
   @apply rounded-full;
-  border: 1px solid var(--color-primary-700);
-  background-image: linear-gradient(
-    to bottom,
-    var(--color-primary-300),
-    var(--color-primary-500) 55%,
-    var(--color-primary-600)
-  );
+  background-color: var(--color-ink);
   padding: 0.875rem 2rem;
-  color: var(--color-accent-ink);
-  font-weight: 600;
-  box-shadow: var(--shadow-button);
-  transition:
-    transform 150ms ease-out,
-    box-shadow 150ms ease-out;
+  color: var(--color-page);
+  font-weight: 500;
+  transition: background-color 150ms ease-out;
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-button-hover);
-  }
-  &:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-button);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    &:hover {
-      transform: none;
-    }
+    background-color: color-mix(in oklab, var(--color-ink) 85%, var(--color-page));
   }
 }
 
@@ -178,14 +158,14 @@
 
   & h2 {
     @apply heading-3;
-    margin-top: 3rem;
+    margin-top: 3.5rem;
     scroll-margin-top: 1.5rem;
   }
 
   & h3,
   & h4 {
     @apply title;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     scroll-margin-top: 1.5rem;
   }
 
@@ -194,7 +174,7 @@
   & ol,
   & blockquote {
     @apply body;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
   }
 
   & ul {
@@ -208,7 +188,7 @@
   }
 
   & li + li {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
   }
 
   & li > ul,
