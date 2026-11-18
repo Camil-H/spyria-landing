@@ -21,7 +21,7 @@ const homeSections = [
   },
 ]
 const heroSpires = 'svg[data-spires-animated="hero-spires"]'
-const everyoneItems = ['Research with sources.', "Your team's tools.", 'Files and charts in the chat.']
+const everyoneItems = ['Research the team can check.', "Your team's tools.", 'Files and charts in the chat.']
 
 function countAnimationFrames(page: Page) {
   return page.addInitScript(() => {
