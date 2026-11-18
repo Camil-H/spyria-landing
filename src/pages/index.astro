@@ -86,14 +86,13 @@ const structuredData = [
     <h2 id="workspace-heading" class="heading-2">One workspace for people and agents</h2>
     <div class="body mt-8 space-y-6 text-muted">
       <p>
-        <strong class={runIn}>Agents in sandboxes.</strong> Each agent chat gets its own runtime container on a machine you
-        run. Pi runs there on the prompting member's API key. Claude Code and Codex run on a member's own laptop with their
-        own subscription, and the rest of the team can read along.
+        <strong class={runIn}>Each agent in its own space.</strong> Every agent chat gets a private space on a machine you
+        control, where the agent can install, build and test without touching anyone's laptop. Members who prefer Claude
+        Code or Codex bring them in from their own laptop, and the team still reads along.
       </p>
       <p>
-        <strong class={runIn}>Pull requests from a chat.</strong> Attach a chat to a GitHub repository. The agent works on a
-        branch in its runtime, the side panel shows files, changes and commits, and the chat owner opens the pull request
-        under their own GitHub account.
+        <strong class={runIn}>From a chat to a pull request.</strong> Point a chat at a GitHub repository. The agent works
+        on its own branch, everyone sees the changes as they come, and the chat owner opens the pull request.
       </p>
     </div>
   </section>
@@ -125,20 +124,16 @@ const structuredData = [
     <p class="body mt-8">Agents do the work. A person stays responsible for it.</p>
     <ul class="body mt-8 divide-y divide-line border-y border-line text-muted">
       <li class="py-4">
+        <strong class={runIn}>BYOK: Each member's own model key.</strong> Spend belongs to the person who prompted, not to a
+        shared organization key.
+      </li>
+      <li class="py-4">
         <strong class={runIn}>Every agent acts for a person.</strong> It uses the chat owner's tools and rights, and every
         model and tool call records who prompted it and whose chat it ran in.
       </li>
       <li class="py-4">
-        <strong class={runIn}>A person opens every pull request.</strong> The agent works on a branch, and the chat owner
-        opens the pull request under their own GitHub account.
-      </li>
-      <li class="py-4">
         <strong class={runIn}>A shared chat doesn't share your rights.</strong> A colleague prompting in your chat can use
         only the tools you both have, and anything that writes waits for your approval.
-      </li>
-      <li class="py-4">
-        <strong class={runIn}>Each member's own model key.</strong> Spend belongs to the person who prompted, not to a shared
-        organization key.
       </li>
       <li class="py-4">
         <strong class={runIn}>Claude Code and Codex on your own subscription.</strong> The sign-in stays on your laptop, and
@@ -149,6 +144,26 @@ const structuredData = [
         gateway you host.
       </li>
     </ul>
+  </section>
+
+  <section aria-labelledby="costs-heading" class="mt-24 max-w-2xl">
+    <h2 id="costs-heading" class="heading-2">Spend you can see and cap</h2>
+    <p class="body mt-8">Every model call goes through a gateway you host, so you know what each agent costs.</p>
+    <div class="body mt-8 space-y-6 text-muted">
+      <p>
+        <strong class={runIn}>Costs by member, project and model.</strong> Admins follow spend over time and see what moved
+        it: more people, longer sessions, more tokens or pricier models. Each member sees their own usage, down to what they
+        spend per merged pull request.
+      </p>
+      <p>
+        <strong class={runIn}>Budgets that stop at the limit.</strong> Set a daily, weekly or monthly budget per role. A
+        member is warned at 80%, and at 100% their model calls stop until the period ends.
+      </p>
+      <p>
+        <strong class={runIn}>An audit log of who did what.</strong> Every change in the workspace is recorded with who made
+        it, a member or the agent acting for them.
+      </p>
+    </div>
   </section>
 
   <section aria-labelledby="self-hosted-heading" class="mt-24 max-w-2xl">

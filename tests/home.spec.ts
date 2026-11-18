@@ -5,11 +5,15 @@ const homeSections = [
   { heading: 'Working with agents is still a solo act', text: 'someone pastes a transcript into Slack' },
   {
     heading: 'One workspace for people and agents',
-    text: 'Each agent chat gets its own runtime container',
+    text: 'Every agent chat gets a private space on a machine you',
   },
   {
     heading: 'A person behind every agent',
     text: 'anything that writes waits for your approval',
+  },
+  {
+    heading: 'Spend you can see and cap',
+    text: 'at 100% their model calls stop until the period ends',
   },
   {
     heading: 'Runs on your servers',
