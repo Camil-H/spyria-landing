@@ -52,8 +52,8 @@ test.describe('with JavaScript disabled', () => {
     }
     const exampleChat = page.getByRole('figure', { name: 'Example: a dev chat in Spyria' })
     await expect(exampleChat).toBeVisible()
-    await expect(exampleChat.getByText('Answered by Salim Condo').first()).toBeVisible()
-    await expect(exampleChat.getByText('Salim Condo', { exact: true })).toBeVisible()
+    await expect(exampleChat.getByText('Answered by Milo Candos').first()).toBeVisible()
+    await expect(exampleChat.getByText('Milo Candos', { exact: true })).toBeVisible()
     await expect(page.locator(`${heroSpires} path`).first()).toBeAttached()
     await expect(page.locator(`${heroSpires} animate`)).toHaveCount(0)
   })
@@ -64,10 +64,10 @@ test.describe('with JavaScript disabled', () => {
     await page.goto('/')
     const channelThread = page.getByRole('figure', { name: 'Example: a channel thread in Spyria' })
     await expect(channelThread.getByText('payments-support', { exact: true })).toBeVisible()
-    await expect(channelThread.getByText('Salim Condo', { exact: true })).toBeVisible()
+    await expect(channelThread.getByText('Milo Candos', { exact: true })).toBeVisible()
     await expect(channelThread.getByText('Acme says the provider keeps calling our refund webhook')).toBeVisible()
     const threadReplies = channelThread.getByRole('list', { name: 'Thread replies' })
-    await expect(threadReplies.getByText('Camille Duciel', { exact: true })).toBeVisible()
+    await expect(threadReplies.getByText('Lucile Decimal', { exact: true })).toBeVisible()
     await expect(threadReplies.getByText('On it. Starting an agent from this thread.')).toBeVisible()
     await expect(channelThread.getByText('Start runtime from this message')).toBeVisible()
     await expect(channelThread.getByText('Runtime: Refund retries on 409')).toBeVisible()
@@ -131,7 +131,7 @@ const storyOpacityAt = async (page: Page, seconds: number, selector: string) => 
 
 const questionOptions = '[data-story-shown-until="salimAnswer"]'
 
-test("As a visitor, the hero story shows its messages one by one, Salim's answer replaces the question's options without changing the chat's height, then the story starts over", async ({
+test("As a visitor, the hero story shows its messages one by one, Milo's answer replaces the question's options without changing the chat's height, then the story starts over", async ({
   page,
 }) => {
   test.slow()

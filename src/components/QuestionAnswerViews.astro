@@ -8,8 +8,8 @@ const { isSpacer = false } = Astro.props
 const submitButton = 'rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-ink'
 const skipButton = 'rounded-full border border-line px-4 py-1.5 text-sm text-ink'
 const answerOptions = [
-  { label: 'Only stop the retries', isSalimChoice: true },
-  { label: 'Also mark it as settled', isSalimChoice: false },
+  { label: 'Only stop the retries', isMiloChoice: true },
+  { label: 'Also mark it as settled', isMiloChoice: false },
 ]
 const optionsSchedule = isSpacer ? 'data-story-shown-from' : 'data-story-shown-until'
 const answerSchedule = isSpacer ? 'data-story-shown-until' : 'data-story-shown-from'
@@ -20,10 +20,10 @@ const answerSchedule = isSpacer ? 'data-story-shown-until' : 'data-story-shown-f
     <div class="flex flex-col gap-3 pl-px">
       <div class="flex flex-col gap-1.5">
         {
-          answerOptions.map(({ label, isSalimChoice }) => (
+          answerOptions.map(({ label, isMiloChoice }) => (
             <p class="flex items-baseline gap-2">
               <span class="relative top-0.5 size-3.5 shrink-0 rounded-full border border-muted">
-                {isSalimChoice && !isSpacer && (
+                {isMiloChoice && !isSpacer && (
                   <span
                     class="absolute -inset-px rounded-full border-4 border-accent bg-raised"
                     data-story-step="salimChoice"
@@ -44,7 +44,7 @@ const answerSchedule = isSpacer ? 'data-story-shown-until' : 'data-story-shown-f
   <div {...{ [answerSchedule]: 'salimAnswer' }} aria-hidden={isSpacer ? 'true' : undefined}>
     <div class="flex flex-col gap-1.5" data-story-step={isSpacer ? undefined : 'salimAnswer'}>
       <p>Only stop the retries</p>
-      <p class="text-xs text-muted">Answered by Salim Condo</p>
+      <p class="text-xs text-muted">Answered by Milo Candos</p>
     </div>
   </div>
 </div>
