@@ -1,11 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content'
-import { docsSlugOf, isDocsPageBuilt } from '../../docs/routes'
+import { docsRouteOf, isInstallGuide } from '../../docs/routes'
+import { summaryOf } from '../../docs/summary'
 import Docs from '../../layouts/Docs.astro'
 
 export async function getStaticPaths() {
-  const entries = await getCollection('docs', ({ id }) => isDocsPageBuilt(id))
-  return entries.map((entry) => ({ params: { slug: docsSlugOf(entry.id) }, props: { entry } }))
+  const entries = await getCollection('docs', ({ id }) => isInstallGuide(id))
+  return entries.map((entry) => ({ params: { slug: docsRouteOf(entry.id).slice('/docs/'.length) }, props: { entry } }))
 }
 
 const { entry } = Astro.props
@@ -13,6 +14,6 @@ const { Content, headings } = await render(entry)
 const title = headings.find(({ depth }) => depth === 1)?.text ?? entry.id
 ---
 
-<Docs docsPath={entry.id} title={title} markdown={entry.body ?? ''}>
+<Docs route={docsRouteOf(entry.id)} docsPath={entry.id} title={title} description={summaryOf(entry.body ?? '')}>
   <Content />
 </Docs>

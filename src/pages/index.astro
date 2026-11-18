@@ -3,7 +3,7 @@ import ChannelThread from '../components/ChannelThread.astro'
 import Spires from '../components/Spires.astro'
 import Transcript from '../components/Transcript.astro'
 import Page from '../layouts/Page.astro'
-import { installPublished, productLicenseUrl, productRepositoryUrl } from '../site'
+import { productLicenseUrl, productRepositoryUrl } from '../site'
 
 const runIn = 'font-medium text-ink'
 const description =
@@ -46,13 +46,9 @@ const structuredData = [
         Spyria is a self-hosted workspace where people and agents work in the same chats. Everyone can follow an agent's
         work, answer its questions and pick up where a colleague left off.
       </p>
-      {
-        installPublished && (
-          <p class="title mt-8 flex flex-wrap justify-center gap-x-8 gap-y-3">
-            <a href="/docs/install" class="highlight-link">Install on your server</a>
-          </p>
-        )
-      }
+      <p class="title mt-8 flex flex-wrap justify-center gap-x-8 gap-y-3">
+        <a href="/docs/install" class="highlight-link">Install Spyria</a>
+      </p>
     </div>
     <div data-hero-story class="relative isolate mt-12 py-16 sm:mt-16 sm:py-24">
       <Spires
@@ -161,7 +157,7 @@ const structuredData = [
       </p>
       <p>
         You need a machine with Docker, an HTTPS address and an identity provider.
-        {installPublished && <a href="/docs/install" class="highlight-link">Read the install guide</a>}
+        <a href="/docs/install" class="highlight-link">Read the install guide</a>
       </p>
     </div>
     <p class="caption mt-8 text-muted">

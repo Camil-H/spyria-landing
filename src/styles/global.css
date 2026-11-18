@@ -340,6 +340,39 @@
   }
 }
 
+.docs-prose .install-options {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.docs-prose .install-option {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-raised);
+  padding: 1.5rem;
+
+  & h2 {
+    margin-top: 0;
+  }
+
+  & p {
+    margin-top: 0.5rem;
+  }
+
+  & .install-option-guides {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1rem;
+  }
+}
+
+.docs-prose .install-command {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .docs-search {
   --pf-font: var(--font-sans);
   --pf-text: var(--color-ink);

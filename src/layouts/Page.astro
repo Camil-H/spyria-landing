@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css'
-import { docsPublished, navigation, productLicenseUrl, productRepositoryUrl } from '../site'
+import { navigation, productLicenseUrl, productRepositoryUrl } from '../site'
 
 interface Props {
   title: string
@@ -130,7 +130,6 @@ const currentPath = Astro.url.pathname
         class="caption mx-auto flex max-w-5xl flex-wrap gap-x-6 gap-y-2 border-t border-line px-4 py-10 text-muted sm:px-6"
       >
         <a href={productRepositoryUrl} class="rounded-sm hover:text-ink">GitHub</a>
-        {docsPublished && <a href="/docs" class="rounded-sm hover:text-ink">Docs</a>}
         <a href={productLicenseUrl} class="rounded-sm hover:text-ink">License</a>
       </nav>
       <slot name="footer" />

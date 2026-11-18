@@ -1,9 +1,9 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { docsPublished } from '../src/site'
 
 const pages = [
   { name: 'Home', path: '/', heading: 'Everyone works with agents. Rarely together.' },
+  { name: 'the install overview', path: '/docs/install', heading: 'Install Spyria' },
   { name: '404', path: '/a-page-that-does-not-exist', heading: 'This page does not exist' },
 ]
 
@@ -17,19 +17,18 @@ for (const { name, path, heading } of pages) {
   })
 }
 
-test('As a visitor on a missing page, I see the 404 page with a link to Home, and to Docs once they are published', async ({
+test('As a visitor on a missing page, I see the 404 page with a link to Home and none to a docs index', async ({
   page,
 }) => {
   const response = await page.goto('/a-page-that-does-not-exist')
   expect(response?.status()).toBe(404)
   await expect(page.getByRole('link', { name: 'Go to the home page' })).toHaveAttribute('href', '/')
-  await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveCount(docsPublished ? 1 : 0)
+  await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveCount(0)
 })
 
-test('While the docs are unpublished, /docs and its pages outside the install guides are not served and Home does not link to them', async ({
+test('As a visitor, the product docs outside the install guides are not served on the site and Home links only to the install pages', async ({
   page,
 }) => {
-  test.skip(docsPublished, 'the docs are published')
   expect((await page.goto('/docs'))?.status()).toBe(404)
   expect((await page.goto('/docs/architecture/overview'))?.status()).toBe(404)
   expect((await page.request.get('/docs/architecture/overview.md')).status()).toBe(404)

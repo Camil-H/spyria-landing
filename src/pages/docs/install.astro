@@ -1,0 +1,78 @@
+---
+import { installOverviewRoute } from '../../docs/routes'
+import Docs from '../../layouts/Docs.astro'
+
+const description =
+  'Choose where to run Spyria: on a laptop to try it, on a server for your team, or on a cloud. Every option installs the same product.'
+
+const installOptions = [
+  {
+    title: 'Test locally',
+    text: 'On your Mac or Linux laptop, to try Spyria. Uses the one-step install. Agents run on the same laptop, and Spyria is unreachable while it sleeps.',
+    guides: [{ label: 'One-machine install', href: '/docs/install/one-machine' }],
+  },
+  {
+    title: 'On a server',
+    text: 'On a Linux server or VM, for your team. Use the one-step install, or the manual install behind your own reverse proxy. Always on, and other machines can add runtime hosts.',
+    guides: [
+      { label: 'One-machine install', href: '/docs/install/one-machine' },
+      { label: 'Manual install', href: '/docs/install/manual-install' },
+    ],
+  },
+  {
+    title: 'On a cloud',
+    text: 'On AWS, Azure or Google Cloud managed services, for a team that wants a managed database and backups. One command sets it up with OpenTofu.',
+    guides: [{ label: 'Cloud install', href: '/docs/install/cloud' }],
+  },
+]
+
+const afterInstalling = [
+  { label: 'Operations', href: '/docs/install/operations' },
+  { label: 'Runtime hosts', href: '/docs/install/machines' },
+  { label: 'Administration', href: '/docs/install/administration' },
+  { label: 'Troubleshooting', href: '/docs/install/troubleshooting' },
+]
+---
+
+<Docs route={installOverviewRoute} title="Install Spyria" description={description}>
+  <h1>Install Spyria</h1>
+  <p>Spyria runs on machines you control. Choose where to run it; every option installs the same product.</p>
+
+  <div class="install-options">
+    {
+      installOptions.map((option) => (
+        <section class="install-option">
+          <h2>{option.title}</h2>
+          <p>{option.text}</p>
+          <p class="install-option-guides">
+            {option.guides.map((guide) => (
+              <a href={guide.href}>{guide.label}</a>
+            ))}
+          </p>
+        </section>
+      ))
+    }
+  </div>
+
+  <h2>The one-step install</h2>
+  <pre class="install-command"><code>curl -fsSL https://spyria.dev/install | sh</code></pre>
+
+  <h2>Every install needs</h2>
+  <ul>
+    <li>Docker, or an account on the cloud;</li>
+    <li>a domain on Cloudflare for the one-step install, or your own HTTPS address for the manual install;</li>
+    <li>an identity provider for sign-in (<a href="/docs/install/who-can-join">Who can join</a>);</li>
+    <li>each member's own model key.</li>
+  </ul>
+
+  <h2>After installing</h2>
+  <ul>
+    {
+      afterInstalling.map((link) => (
+        <li>
+          <a href={link.href}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Docs>

@@ -5,7 +5,6 @@ import { docsRouteOf, isInstallGuide } from './routes'
 export interface DocsLinkContext {
   fromDocsPath: string
   productRef: string
-  docsPublished: boolean
   siteOrigin?: string
 }
 
@@ -27,7 +26,7 @@ export function rewriteDocsHref(href: string, context: DocsLinkContext): string 
   return productFileUrl(repositoryPath, productRef) + suffix
 }
 
-function docsPageUrl(docsPath: string, { productRef, docsPublished, siteOrigin = '' }: DocsLinkContext): string {
-  if (docsPublished || isInstallGuide(docsPath)) return siteOrigin + docsRouteOf(docsPath)
+function docsPageUrl(docsPath: string, { productRef, siteOrigin = '' }: DocsLinkContext): string {
+  if (isInstallGuide(docsPath)) return siteOrigin + docsRouteOf(docsPath)
   return productFileUrl(posix.join('docs', docsPath), productRef)
 }

@@ -1,38 +1,34 @@
 ---
 import { editOnGitHubUrl, readDocsDates, readProductRef } from '../docs/product'
-import { docsRouteOf, isDocsPageIndexed } from '../docs/routes'
-import { docsReadingOrder } from '../docs/sidebar'
-import { loadDocsSidebar } from '../docs/sidebar-data'
-import { summaryOf } from '../docs/summary'
-import { docsPublished, productRepositoryUrl } from '../site'
+import { loadInstallLinks } from '../docs/sidebar'
+import { productRepositoryUrl } from '../site'
 import Page from './Page.astro'
 
 interface Props {
-  docsPath: string
+  route: string
   title: string
-  markdown: string
+  description: string
+  docsPath?: string
 }
 
-const { docsPath, title, markdown } = Astro.props
-const sections = await loadDocsSidebar()
-const readingOrder = docsPublished ? docsReadingOrder(sections) : sections.flatMap(({ links }) => links)
-const position = readingOrder.findIndex((link) => link.docsPath === docsPath)
-const previous = position > 0 ? readingOrder[position - 1] : undefined
-const next = position >= 0 ? readingOrder[position + 1] : undefined
+const { route, title, description, docsPath } = Astro.props
+const installLinks = await loadInstallLinks()
+const position = installLinks.findIndex((link) => link.route === route)
+const previous = position > 0 ? installLinks[position - 1] : undefined
+const next = position >= 0 ? installLinks[position + 1] : undefined
 const productRef = readProductRef()
-const lastChanged = readDocsDates()[docsPath]
+const lastChanged = docsPath && readDocsDates()[docsPath]
 const lastChangedLabel =
   lastChanged &&
   new Date(lastChanged).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
-const currentRoute = docsRouteOf(docsPath)
 const linkClass =
   'block rounded-sm py-1 text-muted transition-colors duration-150 ease-settle hover:text-ink'
 ---
 
-<Page title={title} description={summaryOf(markdown)} isIndexed={isDocsPageIndexed(docsPath)}>
+<Page title={title} description={description}>
   <Fragment slot="head">
     <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
-    <link rel="alternate" type="text/markdown" href={`${currentRoute}.md`} />
+    {docsPath && <link rel="alternate" type="text/markdown" href={`${route}.md`} />}
     <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
   </Fragment>
   <div class="grid gap-8 pt-4 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12 lg:pt-8">
@@ -43,50 +39,40 @@ const linkClass =
       <details class="docs-nav caption">
         <summary class="title cursor-pointer rounded-sm py-2 lg:hidden">Docs pages</summary>
         <nav aria-label="Docs" class="pb-4">
-          {
-            docsPublished && (
-              <a href="/docs" class={linkClass} aria-current={currentRoute === '/docs' ? 'page' : undefined}>
-                Documentation
-              </a>
-            )
-          }
-          {
-            sections.map((section) => (
-              <div class="mt-6 first:mt-0">
-                <p class="title text-ink">{section.title}</p>
-                <ul class="mt-2 border-l border-line pl-3">
-                  {section.links.map((link) => {
-                    const route = docsRouteOf(link.docsPath)
-                    return (
-                      <li>
-                        <a href={route} class={linkClass} aria-current={route === currentRoute ? 'page' : undefined}>
-                          {link.label}
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            ))
-          }
+          <p class="title text-ink">Install</p>
+          <ul class="mt-2 border-l border-line pl-3">
+            {
+              installLinks.map((link) => (
+                <li>
+                  <a href={link.route} class={linkClass} aria-current={link.route === route ? 'page' : undefined}>
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
         </nav>
       </details>
     </aside>
     <div class="min-w-0">
-      <article class="docs-prose" data-pagefind-body data-pagefind-meta={`url:${currentRoute}`}>
+      <article class="docs-prose" data-pagefind-body data-pagefind-meta={`url:${route}`}>
         <slot />
       </article>
-      <footer class="caption mt-12 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 text-muted">
-        <a href={editOnGitHubUrl(docsPath)} class="rounded-sm hover:text-ink">Edit on GitHub</a>
-        <span>
-          Documents Spyria at <a href={`${productRepositoryUrl}/commit/${productRef}`} class="rounded-sm font-mono hover:text-ink">{productRef.slice(0, 7)}</a>
-        </span>
-        {lastChanged && <span>Last changed <time datetime={lastChanged}>{lastChangedLabel}</time></span>}
-      </footer>
+      {
+        docsPath && (
+          <footer class="caption mt-12 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 text-muted">
+            <a href={editOnGitHubUrl(docsPath)} class="rounded-sm hover:text-ink">Edit on GitHub</a>
+            <span>
+              Documents Spyria at <a href={`${productRepositoryUrl}/commit/${productRef}`} class="rounded-sm font-mono hover:text-ink">{productRef.slice(0, 7)}</a>
+            </span>
+            {lastChanged && <span>Last changed <time datetime={lastChanged}>{lastChangedLabel}</time></span>}
+          </footer>
+        )
+      }
       <nav aria-label="Previous and next" class="mt-8 grid gap-4 sm:grid-cols-2">
         {
           previous && (
-            <a href={docsRouteOf(previous.docsPath)} rel="prev" class="pager-link">
+            <a href={previous.route} rel="prev" class="pager-link">
               <span class="caption text-muted">Previous</span>
               <span class="title block">{previous.label}</span>
             </a>
@@ -94,7 +80,7 @@ const linkClass =
         }
         {
           next && (
-            <a href={docsRouteOf(next.docsPath)} rel="next" class="pager-link sm:col-start-2 sm:text-right">
+            <a href={next.route} rel="next" class="pager-link sm:col-start-2 sm:text-right">
               <span class="caption text-muted">Next</span>
               <span class="title block">{next.label}</span>
             </a>
