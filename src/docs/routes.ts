@@ -8,7 +8,6 @@ export const installGuides = [
   { docsPath: 'guides/troubleshooting.md', route: '/docs/install/troubleshooting' },
   { docsPath: 'guides/self-hosting.md', route: '/docs/install/manual-install' },
   { docsPath: 'features/machines.md', route: '/docs/install/machines' },
-  { docsPath: 'features/admin.md', route: '/docs/install/administration' },
 ]
 
 class NotAnInstallGuideError extends Error {}
