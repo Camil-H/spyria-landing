@@ -83,14 +83,37 @@
   display: inline-flex;
   width: 100%;
   max-width: var(--container-sm);
+  align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   @apply rounded-full;
-  background-color: var(--color-accent);
+  border: 1px solid var(--color-primary-700);
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-primary-300),
+    var(--color-primary-500) 55%,
+    var(--color-primary-600)
+  );
   padding: 0.875rem 2rem;
   color: var(--color-accent-ink);
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: var(--shadow-button);
+  transition:
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out;
   &:hover {
-    background-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-hover);
+  }
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
   }
 }
 
