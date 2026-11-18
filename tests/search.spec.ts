@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { docsPublished, productLicenseUrl, productRepositoryUrl } from '../src/site'
+import { productLicenseUrl, productRepositoryUrl } from '../src/site'
 
 const siteOrigin = 'https://spyria.dev'
 const sitePathOf = (url: string) => new URL(url).pathname
@@ -29,7 +29,8 @@ test('As a crawler, I fetch /sitemap.xml and find every published page with its 
   ].map(([, url, lastModified]) => ({ url, lastModified }))
   const urls = entries.map(({ url }) => url)
   expect(urls).toContain(`${siteOrigin}/`)
-  expect(urls.includes(`${siteOrigin}/docs`)).toBe(docsPublished)
+  expect(urls).toContain(`${siteOrigin}/docs/install`)
+  expect(urls).not.toContain(`${siteOrigin}/docs`)
   expect(urls.filter((url) => url?.includes('404'))).toEqual([])
   for (const { url, lastModified } of entries) {
     expect(Date.parse(lastModified ?? ''), `${url} lastmod`).not.toBeNaN()
@@ -91,9 +92,8 @@ test('As a coding agent, I fetch /llms.txt and get the summary and links', async
   expect(llmsText).toContain('Business Source License 1.1')
   expect(llmsText).not.toMatch(/open source/i)
   expect(llmsText).toContain(`[Home](${siteOrigin}/)`)
-  expect(llmsText).toContain(
-    docsPublished ? `(${siteOrigin}/docs.md)` : `(${productRepositoryUrl}/blob/main/docs/guides/self-hosting.md)`,
-  )
+  expect(llmsText).toContain(`[Install Spyria](${siteOrigin}/docs/install)`)
+  expect(llmsText).toContain(`(${productRepositoryUrl}/blob/main/docs/README.md)`)
   for (const [, path] of llmsText.matchAll(/\]\(https:\/\/spyria\.dev(\/[^)\s]*)\)/g))
     expect((await request.get(path ?? '')).status(), path).toBe(200)
 })

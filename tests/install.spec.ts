@@ -1,28 +1,65 @@
 import { readFileSync } from 'node:fs'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { installGuides } from '../src/docs/routes'
-import { installPublished } from '../src/site'
+import { installGuides, installOverviewRoute } from '../src/docs/routes'
 
 const siteOrigin = 'https://spyria.dev'
-const installRoutes = installGuides.map(({ route }) => route)
+const installGuideRoutes = installGuides.map(({ route }) => route)
+const installRoutes = [installOverviewRoute, ...installGuideRoutes]
 const productRef = readFileSync(new URL('../product.ref', import.meta.url), 'utf8').trim()
 
-test('As an engineering lead, I click "Install on your server" on Home and land on the install guide with the curl command', async ({
+test('As a visitor on Home, I follow "Install Spyria", see the three options and open the guide to test locally', async ({
   page,
 }) => {
   await page.goto('/')
-  const installLink = page.getByRole('link', { name: 'Install on your server' })
-  if (installPublished) {
-    await installLink.click()
-    await expect(page).toHaveURL(/\/docs\/install$/)
-  } else {
-    await expect(installLink).toHaveCount(0)
-    await expect(page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Install' })).toHaveCount(0)
-    await page.goto('/docs/install')
-  }
+  await page.getByRole('link', { name: 'Install Spyria' }).click()
+  await expect(page).toHaveURL(/\/docs\/install$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Install Spyria')
+  const article = page.getByRole('article')
+  for (const option of ['Test locally', 'On a server', 'On a cloud'])
+    await expect(article.getByRole('heading', { level: 2, name: option })).toBeVisible()
+  await expect(article).toContainText('curl -fsSL https://spyria.dev/install | sh')
+  await article
+    .locator('section', { has: page.getByRole('heading', { name: 'Test locally' }) })
+    .getByRole('link')
+    .click()
+  await expect(page).toHaveURL(/\/docs\/install\/one-machine$/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Install on one machine')
   await expect(page.getByRole('article')).toContainText('curl -fsSL https://spyria.dev/install | sh')
+})
+
+test("As a visitor, I open each option's guide from /docs/install and each guide loads", async ({ page }) => {
+  const guidesByOption = {
+    'Test locally': [{ link: 'One-machine install', heading: 'Install on one machine' }],
+    'On a server': [
+      { link: 'One-machine install', heading: 'Install on one machine' },
+      { link: 'Manual install', heading: 'Manual install' },
+    ],
+    'On a cloud': [{ link: 'Cloud install', heading: 'Install on AWS, Azure or Google Cloud' }],
+  }
+  for (const [option, guides] of Object.entries(guidesByOption)) {
+    for (const { link, heading } of guides) {
+      await page.goto('/docs/install')
+      await page
+        .getByRole('article')
+        .locator('section', { has: page.getByRole('heading', { name: option }) })
+        .getByRole('link', { name: link })
+        .click()
+      await expect(page.getByRole('heading', { level: 1 }), `${option} → ${link}`).toHaveText(heading)
+    }
+  }
+})
+
+test('As a reader, I find Install in the navigation of every page and it marks the install pages as current', async ({
+  page,
+}) => {
+  for (const route of ['/', '/a-page-that-does-not-exist', ...installRoutes]) {
+    await page.goto(route)
+    const installLink = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Install' })
+    await expect(installLink, route).toHaveAttribute('href', '/docs/install')
+    if (route.startsWith('/docs/install')) await expect(installLink, route).toHaveAttribute('aria-current', 'page')
+    else await expect(installLink, route).not.toHaveAttribute('aria-current')
+  }
 })
 
 test('As an operator, I fetch /install and get the shell script as plain text', async ({ request }) => {
@@ -35,7 +72,7 @@ test('As an operator, I fetch /install and get the shell script as plain text', 
 test('As a reader of the install guide, I move to the cloud guide and then to troubleshooting through the sidebar', async ({
   page,
 }) => {
-  await page.goto('/docs/install')
+  await page.goto('/docs/install/one-machine')
   const sidebar = page.getByRole('navigation', { name: 'Docs' })
   await expect(sidebar.getByRole('link', { name: 'Install on one machine' })).toHaveAttribute('aria-current', 'page')
   await sidebar.getByRole('link', { name: 'Install on AWS, Azure or Google Cloud' }).click()
@@ -95,21 +132,30 @@ for (const colorScheme of ['light', 'dark'] as const) {
   })
 }
 
-test('As a crawler, I find the install pages and their Markdown twins in sitemap.xml and llms.txt once they are published, and noindex before', async ({
+test('As a crawler, I find the install overview and guides in sitemap.xml and llms.txt, none with noindex, and the guides with their Markdown twins', async ({
   page,
   request,
 }) => {
   const sitemap = await (await request.get('/sitemap.xml')).text()
   const llmsText = await (await request.get('/llms.txt')).text()
+  expect(llmsText).toContain(`(${siteOrigin}${installOverviewRoute})`)
   for (const route of installRoutes) {
-    expect(sitemap.includes(`<loc>${siteOrigin}${route}</loc>`), route).toBe(installPublished)
-    expect(llmsText.includes(`(${siteOrigin}${route}.md)`), route).toBe(installPublished)
+    expect(sitemap, route).toContain(`<loc>${siteOrigin}${route}</loc>`)
+    await page.goto(route)
+    await expect(page.locator('meta[name="robots"]'), route).toHaveCount(0)
+  }
+  for (const route of installGuideRoutes) {
+    expect(llmsText, route).toContain(`(${siteOrigin}${route}.md)`)
     const twin = await request.get(`${route}.md`)
     expect(twin.status(), `${route}.md`).toBe(200)
     expect(twin.headers()['content-type'], `${route}.md`).toContain('text/markdown')
-    await page.goto(route)
-    await expect(page.locator('meta[name="robots"][content="noindex"]'), route).toHaveCount(installPublished ? 0 : 1)
   }
+})
+
+test('As a coding agent, I read an install guide as Markdown with absolute links', async ({ request }) => {
+  const markdown = await (await request.get('/docs/install/machines.md')).text()
+  expect(markdown).toContain(`](${siteOrigin}/docs/install/one-machine)`)
+  expect(markdown).not.toMatch(/\]\(\.\.?\//)
 })
 
 test('As a visitor, the install pages run within their Content-Security-Policy', async ({ page }) => {

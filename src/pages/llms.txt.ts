@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
-import { docsRouteOf } from '../docs/routes'
-import { loadDocsSidebar } from '../docs/sidebar-data'
-import { docsPublished, installPublished, productRepositoryUrl } from '../site'
+import { installOverviewRoute } from '../docs/routes'
+import { loadInstallGuideLinks } from '../docs/sidebar'
+import { productRepositoryUrl } from '../site'
 
 const summary =
   'Spyria is a self-hosted workspace where a team and its AI agents work in the same chats and channels, for engineering teams ' +
@@ -14,25 +14,21 @@ const summary =
 
 const productDocsOnGitHub = [
   { label: 'Documentation', path: 'docs/README.md', about: 'the index of the product docs' },
-  {
-    label: 'Self-hosting',
-    path: 'docs/guides/self-hosting.md',
-    about: 'requirements, configuration and the first workspace',
-  },
   { label: 'Agents', path: 'docs/features/agents.md', about: 'harnesses, models, questions, delegation and budgets' },
   { label: 'Decision records', path: 'docs/decisions/README.md', about: 'one short record per architectural decision' },
 ]
 
-async function siteDocsSections(siteOrigin: string): Promise<string[]> {
-  const sections = await loadDocsSidebar()
-  const linkTo = (label: string, docsPath: string) => `- [${label}](${siteOrigin}${docsRouteOf(docsPath)}.md)`
-  const docsIndexSection = docsPublished ? [`## Docs\n\n${linkTo('Documentation', 'README.md')}`] : []
-  return [
-    ...docsIndexSection,
-    ...sections.map(
-      ({ title, links }) => `## ${title}\n\n${links.map(({ label, docsPath }) => linkTo(label, docsPath)).join('\n')}`,
-    ),
+async function installGuidesSection(siteOrigin: string): Promise<string> {
+  const links = (await loadInstallGuideLinks()).map(({ label, route }) => `- [${label}](${siteOrigin}${route}.md)`)
+  return `## Install guides\n\n${links.join('\n')}`
+}
+
+function siteSection(siteOrigin: string): string {
+  const links = [
+    `- [Home](${siteOrigin}/): what Spyria is, how people and agents work together, and what self-hosting needs`,
+    `- [Install Spyria](${siteOrigin}${installOverviewRoute}): where to run Spyria and what every install needs`,
   ]
+  return `## Site\n\n${links.join('\n')}`
 }
 
 function productDocsSection(): string {
@@ -44,14 +40,12 @@ function productDocsSection(): string {
 
 export const GET: APIRoute = async ({ site }) => {
   const siteOrigin = site?.origin ?? ''
-  const productDocsSections = docsPublished ? [] : [productDocsSection()]
-  const siteSections = docsPublished || installPublished ? await siteDocsSections(siteOrigin) : []
   const llmsText = [
     '# Spyria',
     `> ${summary}`,
-    `## Site\n\n- [Home](${siteOrigin}/): what Spyria is, how people and agents work together, and what self-hosting needs`,
-    ...productDocsSections,
-    ...siteSections,
+    siteSection(siteOrigin),
+    await installGuidesSection(siteOrigin),
+    productDocsSection(),
   ].join('\n\n')
   return new Response(`${llmsText}\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
 }
