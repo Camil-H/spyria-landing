@@ -67,16 +67,30 @@
   line-height: var(--text-sm--line-height);
 }
 
-@utility highlight-link {
+@utility text-link {
   color: var(--color-ink);
+  font-weight: 500;
   text-decoration-line: underline;
-  text-decoration-color: var(--color-highlight);
-  text-decoration-thickness: 0.45em;
-  text-underline-offset: -0.3em;
-  text-decoration-skip-ink: none;
+  text-decoration-color: var(--color-link-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
   &:hover {
-    text-decoration-thickness: 1.1em;
-    text-underline-offset: -0.85em;
+    text-decoration-color: var(--color-ink);
+  }
+}
+
+@utility button-primary {
+  display: inline-flex;
+  width: 100%;
+  max-width: var(--container-sm);
+  justify-content: center;
+  @apply rounded-full;
+  background-color: var(--color-accent);
+  padding: 0.875rem 2rem;
+  color: var(--color-accent-ink);
+  font-weight: 500;
+  &:hover {
+    background-color: var(--color-accent-hover);
   }
 }
 
@@ -180,7 +194,7 @@
   }
 
   & a {
-    @apply highlight-link;
+    @apply text-link;
   }
 
   & blockquote {
@@ -318,7 +332,8 @@
 }
 
 .docs-nav a[aria-current="page"] {
-  @apply highlight-link;
+  color: var(--color-ink);
+  font-weight: 500;
 }
 
 @media (width >= 64rem) {
