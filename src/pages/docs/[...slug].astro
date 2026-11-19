@@ -12,8 +12,9 @@ export async function getStaticPaths() {
 const { entry } = Astro.props
 const { Content, headings } = await render(entry)
 const title = headings.find(({ depth }) => depth === 1)?.text ?? entry.id
+const sections = headings.filter(({ depth }) => depth === 2)
 ---
 
-<Docs route={docsRouteOf(entry.id)} docsPath={entry.id} title={title} description={summaryOf(entry.body ?? '')}>
+<Docs route={docsRouteOf(entry.id)} docsPath={entry.id} title={title} sections={sections} description={summaryOf(entry.body ?? '')}>
   <Content />
 </Docs>

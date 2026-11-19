@@ -6,11 +6,11 @@ export const installGuides = [
   { docsPath: 'guides/cloud-aws.md', route: '/docs/install/aws' },
   { docsPath: 'guides/cloud-azure.md', route: '/docs/install/azure' },
   { docsPath: 'guides/cloud-gcp.md', route: '/docs/install/google-cloud' },
+  { docsPath: 'guides/self-hosting.md', route: '/docs/install/manual-install' },
   { docsPath: 'guides/who-can-join.md', route: '/docs/install/who-can-join' },
   { docsPath: 'guides/operations.md', route: '/docs/install/operations' },
   { docsPath: 'guides/security.md', route: '/docs/install/security' },
   { docsPath: 'guides/troubleshooting.md', route: '/docs/install/troubleshooting' },
-  { docsPath: 'guides/self-hosting.md', route: '/docs/install/manual-install' },
   { docsPath: 'features/machines.md', route: '/docs/install/machines' },
 ]
 
