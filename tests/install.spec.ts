@@ -83,6 +83,22 @@ test('As a reader of the install guide, I move to the cloud guide and then to tr
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Troubleshooting')
 })
 
+test('As a reader of the manual install, I find it after the cloud guides and jump to one of its sections from the sidebar', async ({
+  page,
+}) => {
+  await page.goto('/docs/install/manual-install')
+  const sidebar = page.getByRole('navigation', { name: 'Docs' })
+  const pageRoutes = await sidebar
+    .locator('a:not([href^="#"])')
+    .evaluateAll((links) => links.map((link) => link.getAttribute('href')))
+  expect(pageRoutes.indexOf('/docs/install/manual-install')).toBe(pageRoutes.indexOf('/docs/install/google-cloud') + 1)
+  const sections = sidebar.getByRole('list', { name: 'On this page' })
+  await expect(sections).toHaveCount(1)
+  await sections.getByRole('link', { name: 'Upgrading' }).click()
+  await expect(page).toHaveURL(/\/docs\/install\/manual-install#upgrading$/)
+  await expect(page.getByRole('heading', { level: 2, name: 'Upgrading' })).toBeInViewport()
+})
+
 test('As a reader of an install guide, I follow a link to a decision and land on that file on GitHub at the synced commit', async ({
   page,
 }) => {
