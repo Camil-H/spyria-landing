@@ -2,7 +2,6 @@ export const installOverviewRoute = '/docs/install'
 
 export const installGuides = [
   { docsPath: 'guides/install.md', route: '/docs/install/one-machine' },
-  { docsPath: 'guides/cloud.md', route: '/docs/install/cloud' },
   { docsPath: 'guides/cloud-aws.md', route: '/docs/install/aws' },
   { docsPath: 'guides/cloud-azure.md', route: '/docs/install/azure' },
   { docsPath: 'guides/cloud-gcp.md', route: '/docs/install/google-cloud' },

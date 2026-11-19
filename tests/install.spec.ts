@@ -35,7 +35,11 @@ test("As a visitor, I open each option's guide from /docs/install and each guide
       { link: 'One-machine install', heading: 'Install on one machine' },
       { link: 'Manual install', heading: 'Manual install' },
     ],
-    'On a cloud': [{ link: 'Cloud install', heading: 'Install on AWS, Azure or Google Cloud' }],
+    'On a cloud': [
+      { link: 'AWS', heading: 'Install on AWS' },
+      { link: 'Azure', heading: 'Install on Azure' },
+      { link: 'Google Cloud', heading: 'Install on Google Cloud' },
+    ],
   }
   for (const [option, guides] of Object.entries(guidesByOption)) {
     for (const { link, heading } of guides) {
@@ -69,15 +73,15 @@ test('As an operator, I fetch /install and get the shell script as plain text', 
   expect((await response.text()).startsWith('#!/bin/sh\n')).toBe(true)
 })
 
-test('As a reader of the install guide, I move to the cloud guide and then to troubleshooting through the sidebar', async ({
+test('As a reader of the install guide, I move to the AWS guide and then to troubleshooting through the sidebar', async ({
   page,
 }) => {
   await page.goto('/docs/install/one-machine')
   const sidebar = page.getByRole('navigation', { name: 'Docs' })
   await expect(sidebar.getByRole('link', { name: 'Install on one machine' })).toHaveAttribute('aria-current', 'page')
-  await sidebar.getByRole('link', { name: 'Install on AWS, Azure or Google Cloud' }).click()
-  await expect(page).toHaveURL(/\/docs\/install\/cloud$/)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Install on AWS, Azure or Google Cloud')
+  await sidebar.getByRole('link', { name: 'Install on AWS' }).click()
+  await expect(page).toHaveURL(/\/docs\/install\/aws$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Install on AWS')
   await sidebar.getByRole('link', { name: 'Troubleshooting' }).click()
   await expect(page).toHaveURL(/\/docs\/install\/troubleshooting$/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Troubleshooting')

@@ -10,7 +10,7 @@ function rewrite(href: string, fromDocsPath = 'guides/install.md', siteOrigin?: 
 
 describe('rewriteDocsHref', () => {
   test.each([
-    ['./cloud.md', '/docs/install/cloud'],
+    ['./cloud-aws.md', '/docs/install/aws'],
     ['troubleshooting.md#the-setup-link', '/docs/install/troubleshooting#the-setup-link'],
     ['./self-hosting.md#other-machines', '/docs/install/manual-install#other-machines'],
     ['../features/machines.md#removing-a-host', '/docs/install/machines#removing-a-host'],
@@ -40,7 +40,7 @@ describe('rewriteDocsHref', () => {
   })
 
   test('links from the docs index resolve from the docs root', () => {
-    expect(rewrite('guides/cloud.md', 'README.md')).toBe('/docs/install/cloud')
+    expect(rewrite('guides/cloud-aws.md', 'README.md')).toBe('/docs/install/aws')
     expect(rewrite('../AGENTS.md', 'README.md')).toBe(`${productBlob}/AGENTS.md`)
   })
 
@@ -52,8 +52,8 @@ describe('rewriteDocsHref', () => {
   )
 
   test('prefixes the site origin for Markdown twins', () => {
-    expect(rewrite('./cloud.md#modules', 'guides/install.md', 'https://spyria.dev')).toBe(
-      'https://spyria.dev/docs/install/cloud#modules',
+    expect(rewrite('./cloud-aws.md#modules', 'guides/install.md', 'https://spyria.dev')).toBe(
+      'https://spyria.dev/docs/install/aws#modules',
     )
   })
 

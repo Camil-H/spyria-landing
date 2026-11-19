@@ -12,7 +12,7 @@ test('a Markdown twin keeps the source and points its links at absolute site URL
   const source = [
     '# Install',
     '',
-    'See [the cloud guide](./cloud.md#modules), [testing](./testing.md), the [rules](../../AGENTS.md "Rules") and [Bun](https://bun.sh).',
+    'See [the AWS guide](./cloud-aws.md#modules), [testing](./testing.md), the [rules](../../AGENTS.md "Rules") and [Bun](https://bun.sh).',
     '',
     'Write `[not a link](./testing.md)` in code.',
     '',
@@ -27,7 +27,7 @@ test('a Markdown twin keeps the source and points its links at absolute site URL
     [
       '# Install',
       '',
-      'See [the cloud guide](https://spyria.dev/docs/install/cloud#modules), ' +
+      'See [the AWS guide](https://spyria.dev/docs/install/aws#modules), ' +
         `[testing](https://github.com/Camil-H/spyria/blob/${productRef}/docs/guides/testing.md), the ` +
         `[rules](https://github.com/Camil-H/spyria/blob/${productRef}/AGENTS.md "Rules") and [Bun](https://bun.sh).`,
       '',
