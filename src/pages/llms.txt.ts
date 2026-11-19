@@ -26,7 +26,7 @@ async function installGuidesSection(siteOrigin: string): Promise<string> {
 function siteSection(siteOrigin: string): string {
   const links = [
     `- [Home](${siteOrigin}/): what Spyria is, how people and agents work together, and what self-hosting needs`,
-    `- [Install Spyria](${siteOrigin}${installOverviewRoute}): where to run Spyria and what every install needs`,
+    `- [Install Spyria](${siteOrigin}${installOverviewRoute}): where to run Spyria and the one-step install`,
   ]
   return `## Site\n\n${links.join('\n')}`
 }
