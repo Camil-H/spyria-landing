@@ -86,11 +86,14 @@ test('As a reader of the install guide, I move to the cloud guide and then to tr
 test('As a reader of an install guide, I follow a link to a decision and land on that file on GitHub at the synced commit', async ({
   page,
 }) => {
-  await page.goto('/docs/install/who-can-join')
-  const decisionLink = page.getByRole('article').locator('a[href*="/docs/decisions/0012-per-workspace-sso"]').first()
+  await page.goto('/docs/install/manual-install')
+  const decisionLink = page
+    .getByRole('article')
+    .locator('a[href*="/docs/decisions/0028-generic-oidc-must-confirm-addresses"]')
+    .first()
   await expect(decisionLink).toHaveAttribute(
     'href',
-    `https://github.com/Camil-H/spyria/blob/${productRef}/docs/decisions/0012-per-workspace-sso.md`,
+    `https://github.com/Camil-H/spyria/blob/${productRef}/docs/decisions/0028-generic-oidc-must-confirm-addresses.md`,
   )
 })
 
