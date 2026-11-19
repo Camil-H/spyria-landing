@@ -4,14 +4,20 @@ import { loadInstallLinks } from '../docs/sidebar'
 import { productRepositoryUrl } from '../site'
 import Page from './Page.astro'
 
+export interface DocsSection {
+  slug: string
+  text: string
+}
+
 interface Props {
   route: string
   title: string
   description: string
+  sections: DocsSection[]
   docsPath?: string
 }
 
-const { route, title, description, docsPath } = Astro.props
+const { route, title, description, sections, docsPath } = Astro.props
 const installLinks = await loadInstallLinks()
 const position = installLinks.findIndex((link) => link.route === route)
 const previous = position > 0 ? installLinks[position - 1] : undefined
@@ -47,6 +53,17 @@ const linkClass =
                   <a href={link.route} class={linkClass} aria-current={link.route === route ? 'page' : undefined}>
                     {link.label}
                   </a>
+                  {link.route === route && sections.length > 0 && (
+                    <ul aria-label="On this page" class="mb-1 border-l border-line pl-3">
+                      {sections.map((section) => (
+                        <li>
+                          <a href={`#${section.slug}`} class={linkClass}>
+                            {section.text}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))
             }

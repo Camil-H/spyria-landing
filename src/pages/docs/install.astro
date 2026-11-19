@@ -1,12 +1,13 @@
 ---
 import { installOverviewRoute } from '../../docs/routes'
-import Docs from '../../layouts/Docs.astro'
+import Docs, { type DocsSection } from '../../layouts/Docs.astro'
 
 const description =
   'Choose where to run Spyria: on a laptop to try it, on a server for your team, or on a cloud. Every option installs the same product.'
 
 const installOptions = [
   {
+    slug: 'test-locally',
     title: 'Test locally',
     lines: [
       'On your Mac or Linux laptop, to try Spyria.',
@@ -15,6 +16,7 @@ const installOptions = [
     guides: [{ label: 'One-machine install', href: '/docs/install/one-machine' }],
   },
   {
+    slug: 'on-a-server',
     title: 'On a server',
     lines: [
       'On a Linux server or VM, for your team.',
@@ -26,6 +28,7 @@ const installOptions = [
     ],
   },
   {
+    slug: 'on-a-cloud',
     title: 'On a cloud',
     lines: [
       'On AWS, Azure or Google Cloud managed services, for a team that wants a managed database and backups.',
@@ -35,6 +38,17 @@ const installOptions = [
   },
 ]
 
+const oneStepInstall = { slug: 'the-one-step-install', text: 'The one-step install' }
+const everyInstallNeeds = { slug: 'every-install-needs', text: 'Every install needs' }
+const afterInstallingSection = { slug: 'after-installing', text: 'After installing' }
+
+const sections: DocsSection[] = [
+  ...installOptions.map((option) => ({ slug: option.slug, text: option.title })),
+  oneStepInstall,
+  everyInstallNeeds,
+  afterInstallingSection,
+]
+
 const afterInstalling = [
   { label: 'Operations', href: '/docs/install/operations' },
   { label: 'Runtime hosts', href: '/docs/install/machines' },
@@ -42,7 +56,7 @@ const afterInstalling = [
 ]
 ---
 
-<Docs route={installOverviewRoute} title="Install Spyria" description={description}>
+<Docs route={installOverviewRoute} title="Install Spyria" sections={sections} description={description}>
   <h1>Install Spyria</h1>
   <p>Spyria runs on machines you control. Choose where to run it; every option installs the same product.</p>
 
@@ -50,7 +64,7 @@ const afterInstalling = [
     {
       installOptions.map((option) => (
         <section class="install-option">
-          <h2>{option.title}</h2>
+          <h2 id={option.slug}>{option.title}</h2>
           {option.lines.map((line) => (
             <p>{line}</p>
           ))}
@@ -64,17 +78,17 @@ const afterInstalling = [
     }
   </div>
 
-  <h2>The one-step install</h2>
+  <h2 id={oneStepInstall.slug}>{oneStepInstall.text}</h2>
   <pre class="install-command"><code>curl -fsSL https://spyria.dev/install | sh</code></pre>
 
-  <h2>Every install needs</h2>
+  <h2 id={everyInstallNeeds.slug}>{everyInstallNeeds.text}</h2>
   <ul>
     <li>Docker, or an account on the cloud;</li>
     <li>a domain, with ports 80 and 443 of the machine reachable from the internet, or on Cloudflare when they cannot be, as on a laptop;</li>
     <li>an identity provider for sign-in (<a href="/docs/install/who-can-join">Who can join</a>).</li>
   </ul>
 
-  <h2>After installing</h2>
+  <h2 id={afterInstallingSection.slug}>{afterInstallingSection.text}</h2>
   <ul>
     {
       afterInstalling.map((link) => (
