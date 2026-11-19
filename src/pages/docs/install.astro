@@ -8,12 +8,18 @@ const description =
 const installOptions = [
   {
     title: 'Test locally',
-    text: 'On your Mac or Linux laptop, to try Spyria. Uses the one-step install with a Cloudflare tunnel, so nothing opens on your network. Agents run on the same laptop, and Spyria is unreachable while it sleeps.',
+    lines: [
+      'On your Mac or Linux laptop, to try Spyria.',
+      'Agents run on the same laptop, and Spyria is unreachable while it sleeps.',
+    ],
     guides: [{ label: 'One-machine install', href: '/docs/install/one-machine' }],
   },
   {
     title: 'On a server',
-    text: "On a Linux server or VM, for your team. Use the one-step install, with HTTPS on the server's own address or through a Cloudflare tunnel, or the manual install behind your own reverse proxy. Always on, and other machines can add runtime hosts.",
+    lines: [
+      'On a Linux server or VM, for your team.',
+      'Always on, and other machines can be added as runtime hosts for agents.',
+    ],
     guides: [
       { label: 'One-machine install', href: '/docs/install/one-machine' },
       { label: 'Manual install', href: '/docs/install/manual-install' },
@@ -21,7 +27,10 @@ const installOptions = [
   },
   {
     title: 'On a cloud',
-    text: 'On AWS, Azure or Google Cloud managed services, for a team that wants a managed database and backups. One command sets it up with OpenTofu.',
+    lines: [
+      'On AWS, Azure or Google Cloud managed services, for a team that wants a managed database and backups.',
+      'One command sets it up with OpenTofu.',
+    ],
     guides: [{ label: 'Cloud install', href: '/docs/install/cloud' }],
   },
 ]
@@ -42,7 +51,9 @@ const afterInstalling = [
       installOptions.map((option) => (
         <section class="install-option">
           <h2>{option.title}</h2>
-          <p>{option.text}</p>
+          {option.lines.map((line) => (
+            <p>{line}</p>
+          ))}
           <p class="install-option-guides">
             {option.guides.map((guide) => (
               <a href={guide.href}>{guide.label}</a>
@@ -59,9 +70,8 @@ const afterInstalling = [
   <h2>Every install needs</h2>
   <ul>
     <li>Docker, or an account on the cloud;</li>
-    <li>a domain: on Cloudflare for a tunnel, or at any DNS provider for HTTPS on the server's own address (ports 80 and 443 open);</li>
-    <li>an identity provider for sign-in (<a href="/docs/install/who-can-join">Who can join</a>);</li>
-    <li>each member's own model key.</li>
+    <li>a domain, with ports 80 and 443 of the machine reachable from the internet, or on Cloudflare when they cannot be, as on a laptop;</li>
+    <li>an identity provider for sign-in (<a href="/docs/install/who-can-join">Who can join</a>).</li>
   </ul>
 
   <h2>After installing</h2>
