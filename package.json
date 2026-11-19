@@ -5,7 +5,7 @@
   "scripts": {
     "sync": "bun scripts/sync-product.ts",
     "dev": "bun run sync && astro dev",
-    "build": "bun run sync && astro build && pagefind --site dist",
+    "build": "bun run sync && rm -rf node_modules/.astro/data-store.json && astro build && pagefind --site dist",
     "preview": "astro preview",
     "typecheck": "bun run sync && astro check",
     "lint": "biome check .",
