@@ -39,26 +39,15 @@ const installOptions = [
 ]
 
 const oneStepInstall = { slug: 'the-one-step-install', text: 'The one-step install' }
-const everyInstallNeeds = { slug: 'every-install-needs', text: 'Every install needs' }
-const afterInstallingSection = { slug: 'after-installing', text: 'After installing' }
 
 const sections: DocsSection[] = [
   ...installOptions.map((option) => ({ slug: option.slug, text: option.title })),
   oneStepInstall,
-  everyInstallNeeds,
-  afterInstallingSection,
-]
-
-const afterInstalling = [
-  { label: 'Operations', href: '/docs/install/operations' },
-  { label: 'Runtime hosts', href: '/docs/install/machines' },
-  { label: 'Troubleshooting', href: '/docs/install/troubleshooting' },
 ]
 ---
 
 <Docs route={installOverviewRoute} title="Install Spyria" sections={sections} description={description}>
   <h1>Install Spyria</h1>
-  <p>Spyria runs on machines you control. Choose where to run it; every option installs the same product.</p>
 
   <div class="install-options">
     {
@@ -80,22 +69,4 @@ const afterInstalling = [
 
   <h2 id={oneStepInstall.slug}>{oneStepInstall.text}</h2>
   <pre class="install-command"><code>curl -fsSL https://spyria.dev/install | sh</code></pre>
-
-  <h2 id={everyInstallNeeds.slug}>{everyInstallNeeds.text}</h2>
-  <ul>
-    <li>Docker, or an account on the cloud;</li>
-    <li>a domain, with ports 80 and 443 of the machine reachable from the internet, or on Cloudflare when they cannot be, as on a laptop;</li>
-    <li>an identity provider for sign-in (<a href="/docs/install/who-can-join">Who can join</a>).</li>
-  </ul>
-
-  <h2 id={afterInstallingSection.slug}>{afterInstallingSection.text}</h2>
-  <ul>
-    {
-      afterInstalling.map((link) => (
-        <li>
-          <a href={link.href}>{link.label}</a>
-        </li>
-      ))
-    }
-  </ul>
 </Docs>
