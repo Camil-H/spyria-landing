@@ -4,7 +4,7 @@ Instructions for anyone changing this repository: coding agents and people. Read
 
 ## What this is
 
-The public site of Spyria at `spyria.dev`: Home, the install overview at `/docs/install` with the install guides under it, and the install script at `/install`. Spyria itself lives in [github.com/Camil-H/spyria](https://github.com/Camil-H/spyria); its `docs/` folder is the single source of the install guides, fetched at build time and never copied here.
+The public site of Spyria at `spyria.dev`: Home, the docs (the install overview at `/docs/install`, the install and run guides under it, and the Using Spyria pages), and the install script at `/install`. Spyria itself lives in [github.com/Camil-H/spyria](https://github.com/Camil-H/spyria); its `docs/` folder is the single source of the docs pages, fetched at build time and never copied here.
 
 Stack: Astro (static output), Tailwind v4, Bun for scripts and the lockfile, Cloudflare Workers static assets (`wrangler.jsonc` serves `dist/`). Design rules: [.agents/skills/site-design/SKILL.md](.agents/skills/site-design/SKILL.md).
 
@@ -41,8 +41,8 @@ bun run og              # redraw the social card public/og/home.png with Playwri
 - `product.ref` holds the full commit SHA of the product the docs are built from. `scripts/sync-product.ts` (run by `dev`, `build` and `typecheck`) checks out the product's `docs/` and `deploy/install.sh` at that commit into `.product/` (gitignored, never edited by hand), with each page's last-changed date in `.product/docs-dates.json`. It skips the fetch when `.product/` already matches the ref.
 - The product repository is public: the sync needs no token.
 - `src/pages/install.ts` serves that `install.sh` at `/install` as plain text (`curl -fsSL https://spyria.dev/install | sh`).
-- The site publishes only the install guides (the pages listed in `installGuides` of `src/docs/routes.ts`), under `/docs/install/…`. The rest of the product docs is written for contributors and stays on GitHub: links to it go to the file at `product.ref`. `/docs/install` itself is `src/pages/docs/install.astro`, written here: the install options, linking to the guides. The navigation and Home link to it.
-- `src/docs/` turns those files into pages: the sidebar lists the overview and the install guides, links between install guides become site links and links elsewhere in the product become GitHub links at `product.ref`, Mermaid diagrams become inline SVG at build time, code colours are classes (the Content-Security-Policy allows no inline style). Each guide also has a Markdown twin at its path with `.md`.
+- The site publishes only the pages listed in `docsSections` of `src/docs/routes.ts`, in two sections: Install and run, for whoever runs the deployment, under `/docs/install/…`; Using Spyria, for workspace admins and members, under `/docs/…`. The rest of the product docs is written for contributors and stays on GitHub: links to it go to the file at `product.ref`. `/docs/install` itself is `src/pages/docs/install.astro`, written here: the install options, linking to the guides. The navigation ("Docs") and Home link to it.
+- `src/docs/` turns those files into pages: the sidebar lists the two sections, the overview first, links between published pages become site links and links elsewhere in the product become GitHub links at `product.ref`, Mermaid diagrams become inline SVG at build time, code colours are classes (the Content-Security-Policy allows no inline style). Each published page also has a Markdown twin at its path with `.md`.
 - A push to the product's `main` that touches `docs/**` dispatches `product-docs-changed`; `.github/workflows/sync.yml` then opens or updates the pull request "docs: sync to <sha>" from `sync/product-docs`. Run it by hand from the Actions tab with a commit SHA to move the docs to any product commit.
 
 ## Tests
