@@ -1,11 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content'
-import { docsRouteOf, isInstallGuide } from '../../docs/routes'
+import { docsRouteOf, isPublishedDocsPage } from '../../docs/routes'
 import { summaryOf } from '../../docs/summary'
 import Docs from '../../layouts/Docs.astro'
 
 export async function getStaticPaths() {
-  const entries = await getCollection('docs', ({ id }) => isInstallGuide(id))
+  const entries = await getCollection('docs', ({ id }) => isPublishedDocsPage(id))
   return entries.map((entry) => ({ params: { slug: docsRouteOf(entry.id).slice('/docs/'.length) }, props: { entry } }))
 }
 

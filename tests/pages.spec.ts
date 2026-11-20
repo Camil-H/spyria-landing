@@ -26,7 +26,7 @@ test('As a visitor on a missing page, I see the 404 page with a link to Home and
   await expect(page.getByRole('link', { name: 'Read the docs' })).toHaveCount(0)
 })
 
-test('As a visitor, the product docs outside the install guides are not served on the site and Home links only to the install pages', async ({
+test('As a visitor, the product docs outside the published pages are not served on the site and Home links only to the install pages', async ({
   page,
 }) => {
   expect((await page.goto('/docs'))?.status()).toBe(404)

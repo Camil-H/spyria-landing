@@ -1,7 +1,7 @@
 export const productRepositoryUrl = 'https://github.com/Camil-H/spyria'
 export const productLicenseUrl = `${productRepositoryUrl}/blob/main/LICENSE`
 
-export const navigation = [{ label: 'Install', href: '/docs/install' }]
+export const navigation = [{ label: 'Docs', href: '/docs/install', currentFor: '/docs/' }]
 
 export const publishedPages = [
   { path: '/', sourceFiles: ['src/pages/index.astro', 'src/components/Transcript.astro'] },

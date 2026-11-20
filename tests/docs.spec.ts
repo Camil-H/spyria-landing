@@ -1,11 +1,11 @@
 import { readFileSync } from 'node:fs'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { installGuides, installOverviewRoute } from '../src/docs/routes'
+import { docsPages, installOverviewRoute } from '../src/docs/routes'
 
 const siteOrigin = 'https://spyria.dev'
-const installGuideRoutes = installGuides.map(({ route }) => route)
-const installRoutes = [installOverviewRoute, ...installGuideRoutes]
+const docsPageRoutes = docsPages.map(({ route }) => route)
+const docsRoutes = [installOverviewRoute, ...docsPageRoutes]
 const productRef = readFileSync(new URL('../product.ref', import.meta.url), 'utf8').trim()
 
 test('As a visitor on Home, I follow "Install Spyria", see the three options and open the guide to test locally', async ({
@@ -54,15 +54,15 @@ test("As a visitor, I open each option's guide from /docs/install and each guide
   }
 })
 
-test('As a reader, I find Install in the navigation of every page and it marks the install pages as current', async ({
+test('As a reader, I find Docs in the navigation of every page and it marks every docs page as current', async ({
   page,
 }) => {
-  for (const route of ['/', '/a-page-that-does-not-exist', ...installRoutes]) {
+  for (const route of ['/', '/a-page-that-does-not-exist', ...docsRoutes]) {
     await page.goto(route)
-    const installLink = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Install' })
-    await expect(installLink, route).toHaveAttribute('href', '/docs/install')
-    if (route.startsWith('/docs/install')) await expect(installLink, route).toHaveAttribute('aria-current', 'page')
-    else await expect(installLink, route).not.toHaveAttribute('aria-current')
+    const docsLink = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Docs', exact: true })
+    await expect(docsLink, route).toHaveAttribute('href', '/docs/install')
+    if (route.startsWith('/docs/')) await expect(docsLink, route).toHaveAttribute('aria-current', 'page')
+    else await expect(docsLink, route).not.toHaveAttribute('aria-current')
   }
 })
 
@@ -85,6 +85,32 @@ test('As a reader of the install guide, I move to the AWS guide and then to trou
   await sidebar.getByRole('link', { name: 'Troubleshooting' }).click()
   await expect(page).toHaveURL(/\/docs\/install\/troubleshooting$/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Troubleshooting')
+})
+
+test('As a workspace member, I find the Using Spyria pages after the install pages and open Agents from the sidebar', async ({
+  page,
+}) => {
+  await page.goto('/docs/install')
+  const sidebar = page.getByRole('navigation', { name: 'Docs' })
+  const sectionTitles = await sidebar.locator(':scope > div > p').allTextContents()
+  expect(sectionTitles).toEqual(['Install and run', 'Using Spyria'])
+  const usingSpyria = sidebar.locator('div', { has: page.getByText('Using Spyria', { exact: true }) })
+  await usingSpyria.getByRole('link', { name: 'Agents', exact: true }).click()
+  await expect(page).toHaveURL(/\/docs\/agents$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Agents')
+  await expect(sidebar.getByRole('link', { name: 'Agents', exact: true })).toHaveAttribute('aria-current', 'page')
+})
+
+test('As a reader with an old link, I land on the page that moved from Install to Using Spyria', async ({ page }) => {
+  const movedRoutes: [string, string][] = [
+    ['/docs/install/machines', '/docs/machines'],
+    ['/docs/install/who-can-join', '/docs/who-can-join'],
+  ]
+  for (const [oldRoute, newRoute] of movedRoutes) {
+    await page.goto(oldRoute)
+    await expect(page, oldRoute).toHaveURL(new RegExp(`${newRoute}$`))
+    await expect(page.getByRole('heading', { level: 1 }), oldRoute).toBeVisible()
+  }
 })
 
 test('As a reader of the manual install, I find it after the cloud guides and jump to one of its sections from the sidebar', async ({
@@ -117,9 +143,9 @@ test('As a reader of an install guide, I follow a link to a decision and land on
   )
 })
 
-test('As a reader on a 360 px phone, I read every install page without scrolling sideways', async ({ page }) => {
+test('As a reader on a 360 px phone, I read every docs page without scrolling sideways', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 })
-  for (const route of installRoutes) {
+  for (const route of docsRoutes) {
     await page.goto(route)
     await expect(page.getByRole('heading', { level: 1 }), route).toBeVisible()
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
@@ -130,8 +156,8 @@ test('As a reader on a 360 px phone, I read every install page without scrolling
 test.describe('with JavaScript disabled', () => {
   test.use({ javaScriptEnabled: false })
 
-  test('As a reader, I read every install page without JavaScript', async ({ page }) => {
-    for (const route of installRoutes) {
+  test('As a reader, I read every docs page without JavaScript', async ({ page }) => {
+    for (const route of docsRoutes) {
       await page.goto(route)
       await expect(page.getByRole('heading', { level: 1 }), route).toBeVisible()
       expect((await page.getByRole('article').textContent())?.trim().length, route).toBeGreaterThan(200)
@@ -140,10 +166,10 @@ test.describe('with JavaScript disabled', () => {
 })
 
 for (const colorScheme of ['light', 'dark'] as const) {
-  test(`Every install page has no serious or critical accessibility violation in ${colorScheme}`, async ({ page }) => {
+  test(`Every docs page has no serious or critical accessibility violation in ${colorScheme}`, async ({ page }) => {
     test.slow()
     await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' })
-    for (const route of installRoutes) {
+    for (const route of docsRoutes) {
       await page.goto(route)
       const results = await new AxeBuilder({ page }).exclude('svg[aria-hidden="true"]').analyze()
       const blocking = results.violations.filter(({ impact }) => impact === 'serious' || impact === 'critical')
@@ -155,19 +181,19 @@ for (const colorScheme of ['light', 'dark'] as const) {
   })
 }
 
-test('As a crawler, I find the install overview and guides in sitemap.xml and llms.txt, none with noindex, and the guides with their Markdown twins', async ({
+test('As a crawler, I find every docs page in sitemap.xml and llms.txt, none with noindex, and the product pages with their Markdown twins', async ({
   page,
   request,
 }) => {
   const sitemap = await (await request.get('/sitemap.xml')).text()
   const llmsText = await (await request.get('/llms.txt')).text()
   expect(llmsText).toContain(`(${siteOrigin}${installOverviewRoute})`)
-  for (const route of installRoutes) {
+  for (const route of docsRoutes) {
     expect(sitemap, route).toContain(`<loc>${siteOrigin}${route}</loc>`)
     await page.goto(route)
     await expect(page.locator('meta[name="robots"]'), route).toHaveCount(0)
   }
-  for (const route of installGuideRoutes) {
+  for (const route of docsPageRoutes) {
     expect(llmsText, route).toContain(`(${siteOrigin}${route}.md)`)
     const twin = await request.get(`${route}.md`)
     expect(twin.status(), `${route}.md`).toBe(200)
@@ -175,13 +201,13 @@ test('As a crawler, I find the install overview and guides in sitemap.xml and ll
   }
 })
 
-test('As a coding agent, I read an install guide as Markdown with absolute links', async ({ request }) => {
-  const markdown = await (await request.get('/docs/install/machines.md')).text()
-  expect(markdown).toContain(`](${siteOrigin}/docs/install/one-machine)`)
+test('As a coding agent, I read a docs page as Markdown with absolute links', async ({ request }) => {
+  const markdown = await (await request.get('/docs/machines.md')).text()
+  expect(markdown).toContain(`](${siteOrigin}/docs/agents#agent-chats)`)
   expect(markdown).not.toMatch(/\]\(\.\.?\//)
 })
 
-test('As a visitor, the install pages run within their Content-Security-Policy', async ({ page }) => {
+test('As a visitor, the docs pages run within their Content-Security-Policy', async ({ page }) => {
   await page.addInitScript(() => {
     const reported = window as unknown as { cspViolations: string[] }
     reported.cspViolations = []
@@ -189,7 +215,7 @@ test('As a visitor, the install pages run within their Content-Security-Policy',
       reported.cspViolations.push(`${event.violatedDirective} ${event.blockedURI}`)
     })
   })
-  for (const route of installRoutes) {
+  for (const route of docsRoutes) {
     await page.goto(route)
     await expect(page.getByRole('heading', { level: 1 }), route).toBeVisible()
     await page.waitForTimeout(200)
@@ -201,7 +227,7 @@ test('As a visitor, the install pages run within their Content-Security-Policy',
 })
 
 test('As a visitor, no page links to /principles and /principles shows the 404 page', async ({ page }) => {
-  for (const route of ['/', ...installRoutes]) {
+  for (const route of ['/', ...docsRoutes]) {
     await page.goto(route)
     await expect(page.locator('a[href^="/principles"]'), route).toHaveCount(0)
   }

@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import { installOverviewRoute } from '../docs/routes'
-import { loadInstallGuideLinks } from '../docs/sidebar'
+import { loadDocsPageLinkGroups } from '../docs/sidebar'
 import { productRepositoryUrl } from '../site'
 
 const summary =
@@ -14,13 +14,14 @@ const summary =
 
 const productDocsOnGitHub = [
   { label: 'Documentation', path: 'docs/README.md', about: 'the index of the product docs' },
-  { label: 'Agents', path: 'docs/features/agents.md', about: 'harnesses, models, questions, delegation and budgets' },
   { label: 'Decision records', path: 'docs/decisions/README.md', about: 'one short record per architectural decision' },
 ]
 
-async function installGuidesSection(siteOrigin: string): Promise<string> {
-  const links = (await loadInstallGuideLinks()).map(({ label, route }) => `- [${label}](${siteOrigin}${route}.md)`)
-  return `## Install guides\n\n${links.join('\n')}`
+async function docsPagesSections(siteOrigin: string): Promise<string[]> {
+  return (await loadDocsPageLinkGroups()).map(({ title, links }) => {
+    const lines = links.map(({ label, route }) => `- [${label}](${siteOrigin}${route}.md)`)
+    return `## ${title}\n\n${lines.join('\n')}`
+  })
 }
 
 function siteSection(siteOrigin: string): string {
@@ -35,7 +36,7 @@ function productDocsSection(): string {
   const links = productDocsOnGitHub.map(
     ({ label, path, about }) => `- [${label}](${productRepositoryUrl}/blob/main/${path}): ${about}`,
   )
-  return `## Docs\n\n${links.join('\n')}`
+  return `## Product docs on GitHub\n\n${links.join('\n')}`
 }
 
 export const GET: APIRoute = async ({ site }) => {
@@ -44,7 +45,7 @@ export const GET: APIRoute = async ({ site }) => {
     '# Spyria',
     `> ${summary}`,
     siteSection(siteOrigin),
-    await installGuidesSection(siteOrigin),
+    ...(await docsPagesSections(siteOrigin)),
     productDocsSection(),
   ].join('\n\n')
   return new Response(`${llmsText}\n`, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })

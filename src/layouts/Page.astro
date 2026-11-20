@@ -96,7 +96,7 @@ const currentPath = Astro.url.pathname
             <a
               href={item.href}
               class="title rounded-sm text-muted transition-colors duration-150 ease-settle hover:text-ink aria-[current=page]:text-ink"
-              aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+              aria-current={currentPath.startsWith(item.currentFor) ? 'page' : undefined}
             >
               {item.label}
             </a>
