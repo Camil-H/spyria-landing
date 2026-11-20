@@ -1,6 +1,6 @@
 ---
 import { editOnGitHubUrl, readDocsDates, readProductRef } from '../docs/product'
-import { loadInstallLinks } from '../docs/sidebar'
+import { loadDocsLinkGroups } from '../docs/sidebar'
 import { productRepositoryUrl } from '../site'
 import Page from './Page.astro'
 
@@ -18,10 +18,11 @@ interface Props {
 }
 
 const { route, title, description, sections, docsPath } = Astro.props
-const installLinks = await loadInstallLinks()
-const position = installLinks.findIndex((link) => link.route === route)
-const previous = position > 0 ? installLinks[position - 1] : undefined
-const next = position >= 0 ? installLinks[position + 1] : undefined
+const linkGroups = await loadDocsLinkGroups()
+const docsLinks = linkGroups.flatMap((group) => group.links)
+const position = docsLinks.findIndex((link) => link.route === route)
+const previous = position > 0 ? docsLinks[position - 1] : undefined
+const next = position >= 0 ? docsLinks[position + 1] : undefined
 const productRef = readProductRef()
 const lastChanged = docsPath && readDocsDates()[docsPath]
 const lastChangedLabel =
@@ -45,29 +46,33 @@ const linkClass =
       <details class="docs-nav caption">
         <summary class="title cursor-pointer rounded-sm py-2 lg:hidden">Docs pages</summary>
         <nav aria-label="Docs" class="pb-4">
-          <p class="title text-ink">Install</p>
-          <ul class="mt-2 border-l border-line pl-3">
-            {
-              installLinks.map((link) => (
-                <li>
-                  <a href={link.route} class={linkClass} aria-current={link.route === route ? 'page' : undefined}>
-                    {link.label}
-                  </a>
-                  {link.route === route && sections.length > 0 && (
-                    <ul aria-label="On this page" class="mb-1 border-l border-line pl-3">
-                      {sections.map((section) => (
-                        <li>
-                          <a href={`#${section.slug}`} class={linkClass}>
-                            {section.text}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))
-            }
-          </ul>
+          {
+            linkGroups.map((group) => (
+              <div class="mb-6 last:mb-0">
+                <p class="title text-ink">{group.title}</p>
+                <ul class="mt-2 border-l border-line pl-3">
+                  {group.links.map((link) => (
+                    <li>
+                      <a href={link.route} class={linkClass} aria-current={link.route === route ? 'page' : undefined}>
+                        {link.label}
+                      </a>
+                      {link.route === route && sections.length > 0 && (
+                        <ul aria-label="On this page" class="mb-1 border-l border-line pl-3">
+                          {sections.map((section) => (
+                            <li>
+                              <a href={`#${section.slug}`} class={linkClass}>
+                                {section.text}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
         </nav>
       </details>
     </aside>

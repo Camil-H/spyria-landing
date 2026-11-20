@@ -13,8 +13,15 @@ describe('rewriteDocsHref', () => {
     ['./cloud-aws.md', '/docs/install/aws'],
     ['troubleshooting.md#the-setup-link', '/docs/install/troubleshooting#the-setup-link'],
     ['./self-hosting.md#other-machines', '/docs/install/manual-install#other-machines'],
-    ['../features/machines.md#removing-a-host', '/docs/install/machines#removing-a-host'],
   ])('from an install guide, the install guide %s becomes the site page %s', (href, expected) => {
+    expect(rewrite(href)).toBe(expected)
+  })
+
+  test.each([
+    ['../features/machines.md#removing-a-host', '/docs/machines#removing-a-host'],
+    ['../features/admin.md#roles', '/docs/administration#roles'],
+    ['./who-can-join.md', '/docs/who-can-join'],
+  ])('from an install guide, the Using Spyria page %s becomes the site page %s', (href, expected) => {
     expect(rewrite(href)).toBe(expected)
   })
 
@@ -27,7 +34,7 @@ describe('rewriteDocsHref', () => {
   test.each([
     ['../decisions/0001-postgres-source-of-truth.md', `${productBlob}/docs/decisions/0001-postgres-source-of-truth.md`],
     ['./testing.md#fakes', `${productBlob}/docs/guides/testing.md#fakes`],
-    ['../features/admin.md#roles', `${productBlob}/docs/features/admin.md#roles`],
+    ['../architecture/overview.md#runtimes', `${productBlob}/docs/architecture/overview.md#runtimes`],
     ['../decisions/', `${productBlob}/docs/decisions/README.md`],
     ['../decisions', `${productBlob}/docs/decisions/README.md`],
     ['../', `${productBlob}/docs/README.md`],

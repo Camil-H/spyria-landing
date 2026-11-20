@@ -1,6 +1,6 @@
 import { posix } from 'node:path'
 import { productFileUrl } from './product'
-import { docsRouteOf, isInstallGuide } from './routes'
+import { docsRouteOf, isPublishedDocsPage } from './routes'
 
 export interface DocsLinkContext {
   fromDocsPath: string
@@ -27,6 +27,6 @@ export function rewriteDocsHref(href: string, context: DocsLinkContext): string 
 }
 
 function docsPageUrl(docsPath: string, { productRef, siteOrigin = '' }: DocsLinkContext): string {
-  if (isInstallGuide(docsPath)) return siteOrigin + docsRouteOf(docsPath)
+  if (isPublishedDocsPage(docsPath)) return siteOrigin + docsRouteOf(docsPath)
   return productFileUrl(posix.join('docs', docsPath), productRef)
 }

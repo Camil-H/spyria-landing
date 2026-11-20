@@ -1,11 +1,11 @@
 import { getCollection } from 'astro:content'
 import type { APIRoute, GetStaticPaths } from 'astro'
 import { readProductRef } from '../docs/product'
-import { docsRouteOf, isInstallGuide } from '../docs/routes'
+import { docsRouteOf, isPublishedDocsPage } from '../docs/routes'
 import { markdownTwin } from '../docs/twins'
 
 export const getStaticPaths = (async () => {
-  const entries = await getCollection('docs', ({ id }) => isInstallGuide(id))
+  const entries = await getCollection('docs', ({ id }) => isPublishedDocsPage(id))
   return entries.map((entry) => ({
     params: { path: docsRouteOf(entry.id).slice(1) },
     props: { docsPath: entry.id, markdown: entry.body ?? '' },

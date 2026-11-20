@@ -1,20 +1,30 @@
 import { getEntry } from 'astro:content'
-import { installGuides, installOverviewRoute } from './routes'
+import { type DocsPage, docsSections, installOverviewRoute } from './routes'
 
-export interface InstallLink {
+export interface DocsLink {
   label: string
   route: string
 }
 
-export async function loadInstallLinks(): Promise<InstallLink[]> {
-  return [{ label: 'Overview', route: installOverviewRoute }, ...(await loadInstallGuideLinks())]
+export interface DocsLinkGroup {
+  title: string
+  links: DocsLink[]
 }
 
-export function loadInstallGuideLinks(): Promise<InstallLink[]> {
-  return Promise.all(
-    installGuides.map(async ({ docsPath, route }) => {
-      const entry = await getEntry('docs', docsPath)
-      return { label: entry?.body?.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? docsPath, route }
-    }),
+export async function loadDocsLinkGroups(): Promise<DocsLinkGroup[]> {
+  const overview = { label: 'Overview', route: installOverviewRoute }
+  return (await loadDocsPageLinkGroups()).map((group, position) =>
+    position === 0 ? { ...group, links: [overview, ...group.links] } : group,
   )
+}
+
+export function loadDocsPageLinkGroups(): Promise<DocsLinkGroup[]> {
+  return Promise.all(
+    docsSections.map(async ({ title, pages }) => ({ title, links: await Promise.all(pages.map(loadDocsPageLink)) })),
+  )
+}
+
+async function loadDocsPageLink({ docsPath, route }: DocsPage): Promise<DocsLink> {
+  const entry = await getEntry('docs', docsPath)
+  return { label: entry?.body?.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? docsPath, route }
 }
